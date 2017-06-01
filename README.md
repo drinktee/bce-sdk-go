@@ -1,1 +1,1 @@
-# cloudbaidu-go
+# bce-sdk-go
