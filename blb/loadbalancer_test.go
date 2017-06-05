@@ -57,3 +57,26 @@ func TestDescribeLoadBalancers(t *testing.T) {
 		fmt.Println(blb.PublicIp)
 	}
 }
+
+func TestUpdateLoadBalancer(t *testing.T) {
+	blbClient.SetDebug(true)
+	args := &UpdateLoadBalancerArgs{
+		LoadBalancerId: "lb-f9b682b2",
+		Name:           "golang-name2",
+	}
+	err := blbClient.UpdateLoadBalancer(args)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestDeleteLoadBalancer(t *testing.T) {
+	blbClient.SetDebug(true)
+	args := &DeleteLoadBalancerArgs{
+		LoadBalancerId: "lb-f9b682b2",
+	}
+	err := blbClient.DeleteLoadBalancer(args)
+	if err != nil {
+		t.Error(err)
+	}
+}
