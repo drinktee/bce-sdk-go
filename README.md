@@ -9,3 +9,4 @@ Base code copy from [https://github.com/guoyao/baidubce-sdk-go](https://github.c
 
 - Guoyao Wu (https://www.guoyao.me)
 - me (zjsxzong89@gmail.com)
+- Yuxiao Song (billsong6919@gmail.com)
