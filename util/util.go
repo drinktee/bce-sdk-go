@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/hmac"
 	"crypto/md5"
+	srand "crypto/rand"
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/hex"
@@ -13,6 +14,7 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"net/url"
 	"os"
 	"os/exec"
@@ -529,4 +531,28 @@ func Debug(title, message string) {
 // FormatTest returns a formatted string for unit test.
 func FormatTest(funcName, got, expected string) string {
 	return fmt.Sprintf("%s failed. Got %s, expected %s", funcName, got, expected)
+}
+
+const dictionary = "_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+
+//CreateRandomString create random string
+func CreateRandomString() string {
+	b := make([]byte, 32)
+	l := len(dictionary)
+
+	_, err := srand.Read(b)
+
+	if err != nil {
+		// fail back to insecure rand
+		rand.Seed(time.Now().UnixNano())
+		for i := range b {
+			b[i] = dictionary[rand.Int()%l]
+		}
+	} else {
+		for i, v := range b {
+			b[i] = dictionary[v%byte(l)]
+		}
+	}
+
+	return string(b)
 }

@@ -1,5 +1,11 @@
 package bcc
 
+import (
+	"encoding/json"
+
+	"github.com/drinktee/bce-sdk-go/bce"
+)
+
 type Instance struct {
 	InstanceId            string `json:"id"`
 	InstanceName          string `json:"name"`
@@ -31,4 +37,65 @@ type ListInstancesResponse struct {
 
 type GetInstanceResponse struct {
 	Ins Instance `json:"instance"`
+}
+
+// ListInstances gets all Instances.
+func (c *Client) ListInstances(option *bce.SignOption) ([]Instance, error) {
+
+	req, err := bce.NewRequest("GET", c.GetURL("v2/instance", nil), nil)
+
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := c.SendRequest(req, option)
+
+	if err != nil {
+		return nil, err
+	}
+
+	bodyContent, err := resp.GetBodyContent()
+
+	if err != nil {
+		return nil, err
+	}
+
+	var insList *ListInstancesResponse
+	err = json.Unmarshal(bodyContent, &insList)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return insList.Instances, nil
+}
+
+func (c *Client) GetInstance(instanceId string, option *bce.SignOption) (*Instance, error) {
+
+	req, err := bce.NewRequest("GET", c.GetURL("v2/instance"+"/"+instanceId, nil), nil)
+
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := c.SendRequest(req, option)
+
+	if err != nil {
+		return nil, err
+	}
+
+	bodyContent, err := resp.GetBodyContent()
+
+	if err != nil {
+		return nil, err
+	}
+
+	var ins *GetInstanceResponse
+	err = json.Unmarshal(bodyContent, &ins)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &ins.Ins, nil
 }

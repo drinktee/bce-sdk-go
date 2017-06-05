@@ -1,4 +1,4 @@
-package bcc
+package blb
 
 import (
 	"github.com/drinktee/bce-sdk-go/bce"
@@ -6,8 +6,8 @@ import (
 
 // Endpoint contains all endpoints of Baidu Cloud BCC.
 var Endpoint = map[string]string{
-	"bj": "bcc.bj.baidubce.com",
-	"gz": "bcc.gz.baidubce.com",
+	"bj": "blb.bj.baidubce.com",
+	"gz": "blb.gz.baidubce.com",
 }
 
 // Config contains all options for bos.Client.
@@ -24,20 +24,17 @@ type Client struct {
 	*bce.Client
 }
 
-func NewClient(config *Config) *Client {
+func NewBLBClient(config *Config) *Client {
 	bceClient := bce.NewClient(config.Config)
 	return &Client{bceClient}
 }
 
 // GetURL generates the full URL of http request for Baidu Cloud BOS API.
-func (c *Client) GetURL(objectKey string, params map[string]string) string {
+func (c *Client) GetURL(version string, params map[string]string) string {
 	host := c.Endpoint
-
 	if host == "" {
 		host = Endpoint[c.GetRegion()]
 	}
-
-	uriPath := objectKey
-
+	uriPath := version
 	return c.Client.GetURL(host, uriPath, params)
 }

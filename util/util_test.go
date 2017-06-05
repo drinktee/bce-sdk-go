@@ -727,3 +727,10 @@ func TestFormatTest(t *testing.T) {
 		t.Error(FormatTest("FormatTest", str, expected))
 	}
 }
+
+func TestCreateRandomString(t *testing.T) {
+	for i := 0; i < 10; i++ {
+		s := CreateRandomString()
+		t.Logf("Generated Random String: %s", s)
+	}
+}

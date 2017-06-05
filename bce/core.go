@@ -21,6 +21,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"math"
 	"net/http"
@@ -35,7 +36,7 @@ import (
 )
 
 const (
-	Version = "1.0.3"
+	Version = "0.0.1"
 
 	// ExpirationPeriodInSeconds 1800s is the default expiration period.
 	ExpirationPeriodInSeconds = 1800
@@ -59,12 +60,25 @@ var Region = map[string]string{
 }
 
 type Credentials struct {
-	AccessKeyID     string
-	SecretAccessKey string
+	AccessKeyID     string `json:"AccessKeyID"`
+	SecretAccessKey string `json:"SecretAccessKey"`
 }
 
 func NewCredentials(AccessKeyID, secretAccessKey string) *Credentials {
 	return &Credentials{AccessKeyID, secretAccessKey}
+}
+
+func NewCredentialsFromFile(filePath string) (*Credentials, error) {
+	bytes, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return nil, err
+	}
+	var c *Credentials
+	err = json.Unmarshal(bytes, &c)
+	if err != nil {
+		return nil, err
+	}
+	return c, nil
 }
 
 // Config contains all options for bce.Client.
@@ -565,6 +579,11 @@ func (c *Client) SendRequest(req *Request, option *SignOption) (bceResponse *Res
 
 		time.Sleep(duration)
 	}
+}
+
+// GenerateClientToken generates the Client Token with random string
+func (client *Client) GenerateClientToken() string {
+	return util.CreateRandomString()
 }
 
 func generateHeaderValidCompareFunc(headerKey string) func(string, string) bool {

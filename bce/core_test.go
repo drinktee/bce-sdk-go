@@ -723,3 +723,14 @@ func TestBCCSendRequest(t *testing.T) {
 
 	client.SetDebug(false)
 }
+
+func TestNewCredentialsFromFile(t *testing.T) {
+	c, err := NewCredentialsFromFile("aksk.json")
+	if err != nil {
+		t.Error("newcredentialsfromfile error")
+	} else {
+		if c.AccessKeyID != "aaa" {
+			t.Error("error ak")
+		}
+	}
+}
