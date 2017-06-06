@@ -1,30 +1,28 @@
 package blb
 
 import (
-	"os"
 	"testing"
 
 	"fmt"
 
-	"github.com/drinktee/bce-sdk-go/bce"
 	"github.com/drinktee/bce-sdk-go/util"
 )
 
-var credentials, _ = bce.NewCredentialsFromFile("../aksk-test.json")
+// var credentials, _ = bce.NewCredentialsFromFile("../aksk-test.json")
 
-//var bceConfig = bce.NewConfig(credentials)
-var bceConfig = &bce.Config{
-	Credentials: credentials,
-	Checksum:    true,
-	Region:      os.Getenv("BOS_REGION"),
-}
-var bccConfig = NewConfig(bceConfig)
-var blbClient = NewBLBClient(bccConfig)
+// //var bceConfig = bce.NewConfig(credentials)
+// var bceConfig = &bce.Config{
+// 	Credentials: credentials,
+// 	Checksum:    true,
+// 	Region:      os.Getenv("BOS_REGION"),
+// }
+// var bccConfig = NewConfig(bceConfig)
+// var blbClient = NewBLBClient(bccConfig)
 
-func TestCredentials(t *testing.T) {
-	fmt.Println(credentials.AccessKeyID)
-	fmt.Println(credentials.SecretAccessKey)
-}
+// func TestCredentials(t *testing.T) {
+// 	fmt.Println(credentials.AccessKeyID)
+// 	fmt.Println(credentials.SecretAccessKey)
+// }
 func TestCreateLoadBalance(t *testing.T) {
 	blbClient.SetDebug(true)
 	args := &CreateLoadBalancerArgs{

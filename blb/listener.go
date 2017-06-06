@@ -1,0 +1,290 @@
+package blb
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+
+	"strconv"
+
+	"github.com/drinktee/bce-sdk-go/bce"
+)
+
+type TCPListener struct {
+	ListenerPort               int    `json:"listenerPort"`
+	BackendPort                int    `json:"backendPort"`
+	Scheduler                  string `json:"scheduler"`
+	HealthCheckTimeoutInSecond int    `json:"healthCheckTimeoutInSecond"`
+	HealthCheckInterval        int    `json:"healthCheckInterval"`
+	UnhealthyThreshold         int    `json:"unhealthyThreshold"`
+	HealthyThreshold           int    `json:"healthyThreshold"`
+}
+
+type UDPListener struct {
+	ListenerPort               int    `json:"listenerPort"`
+	BackendPort                int    `json:"backendPort"`
+	Scheduler                  string `json:"scheduler"`
+	HealthCheckTimeoutInSecond int    `json:"healthCheckTimeoutInSecond"`
+	HealthCheckInterval        int    `json:"healthCheckInterval"`
+	UnhealthyThreshold         int    `json:"unhealthyThreshold"`
+	HealthyThreshold           int    `json:"healthyThreshold"`
+	HealthCheckString          string `json:"healthCheckString"`
+}
+
+type HTTPListener struct {
+	ListenerPort               int    `json:"listenerPort"`
+	BackendPort                int    `json:"backendPort"`
+	Scheduler                  string `json:"scheduler"`
+	KeepSession                bool   `json:"keepSession"`
+	KeepSessionType            string `json:"keepSessionType"`
+	KeepSessionDuration        int    `json:"keepSessionDuration"`
+	KeepSessionCookieName      int    `json:"keepSessionCookieName"`
+	XForwardFor                bool   `json:"xForwardFor"`
+	HealthCheckType            string `json:"healthCheckType"`
+	HealthCheckPort            int    `json:"healthCheckPort"`
+	HealthCheckURI             string `json:"healthCheckURI"`
+	HealthCheckTimeoutInSecond int    `json:"healthCheckTimeoutInSecond"`
+	HealthCheckInterval        int    `json:"healthCheckInterval"`
+	UnhealthyThreshold         int    `json:"unhealthyThreshold"`
+	HealthyThreshold           int    `json:"healthyThreshold"`
+	HealthCheckNormalStatus    string `json:"healthCheckNormalStatus"`
+	ServerTimeout              int    `json:"serverTimeout"`
+	RedirectPort               int    `json:"redirectPort"`
+}
+
+type HTTPSListener struct {
+	ListenerPort               int      `json:"listenerPort"`
+	BackendPort                int      `json:"backendPort"`
+	Scheduler                  string   `json:"scheduler"`
+	KeepSession                bool     `json:"keepSession"`
+	KeepSessionType            string   `json:"keepSessionType"`
+	KeepSessionDuration        int      `json:"keepSessionDuration"`
+	KeepSessionCookieName      int      `json:"keepSessionCookieName"`
+	XForwardFor                bool     `json:"xForwardFor"`
+	HealthCheckType            string   `json:"healthCheckType"`
+	HealthCheckPort            int      `json:"healthCheckPort"`
+	HealthCheckURI             string   `json:"healthCheckURI"`
+	HealthCheckTimeoutInSecond int      `json:"healthCheckTimeoutInSecond"`
+	HealthCheckInterval        int      `json:"healthCheckInterval"`
+	UnhealthyThreshold         int      `json:"unhealthyThreshold"`
+	HealthyThreshold           int      `json:"healthyThreshold"`
+	HealthCheckNormalStatus    string   `json:"healthCheckNormalStatus"`
+	ServerTimeout              int      `json:"serverTimeout"`
+	CertIds                    []string `json:"certIds"`
+	Ie6Compatible              bool     `json:"ie6Compatible"`
+}
+
+type CreateTCPListenerArgs struct {
+	LoadBalancerId             string `json:"-"`
+	ListenerPort               int    `json:"listenerPort"`
+	BackendPort                int    `json:"backendPort"`
+	Scheduler                  string `json:"scheduler"`
+	HealthCheckTimeoutInSecond int    `json:"healthCheckTimeoutInSecond,omitempty"`
+	HealthCheckInterval        int    `json:"healthCheckInterval,omitempty"`
+	UnhealthyThreshold         int    `json:"unhealthyThreshold,omitempty"`
+	HealthyThreshold           int    `json:"healthyThreshold,omitempty"`
+}
+
+type CreateUDPListenerArgs struct {
+	LoadBalancerId             string `json:"-"`
+	ListenerPort               int    `json:"listenerPort"`
+	BackendPort                int    `json:"backendPort"`
+	Scheduler                  string `json:"scheduler"`
+	HealthCheckTimeoutInSecond int    `json:"healthCheckTimeoutInSecond,omitempty"`
+	HealthCheckInterval        int    `json:"healthCheckInterval,omitempty"`
+	UnhealthyThreshold         int    `json:"unhealthyThreshold,omitempty"`
+	HealthyThreshold           int    `json:"healthyThreshold,omitempty"`
+	HealthCheckString          string `json:"healthCheckString"`
+}
+
+type CreateHTTPListenerArgs struct {
+	LoadBalancerId             string `json:"-"`
+	ListenerPort               int    `json:"listenerPort"`
+	BackendPort                int    `json:"backendPort"`
+	Scheduler                  string `json:"scheduler"`
+	KeepSession                bool   `json:"keepSession,omitempty"`
+	KeepSessionType            string `json:"keepSessionType,omitempty"`
+	KeepSessionDuration        int    `json:"keepSessionDuration,omitempty"`
+	KeepSessionCookieName      int    `json:"keepSessionCookieName,omitempty"`
+	XForwardFor                bool   `json:"xForwardFor,omitempty"`
+	HealthCheckType            string `json:"healthCheckType,omitempty"`
+	HealthCheckPort            int    `json:"healthCheckPort,omitempty"`
+	HealthCheckURI             string `json:"healthCheckURI,omitempty"`
+	HealthCheckTimeoutInSecond int    `json:"healthCheckTimeoutInSecond,omitempty"`
+	HealthCheckInterval        int    `json:"healthCheckInterval,omitempty"`
+	UnhealthyThreshold         int    `json:"unhealthyThreshold,omitempty"`
+	HealthyThreshold           int    `json:"healthyThreshold,omitempty"`
+	HealthCheckNormalStatus    string `json:"healthCheckNormalStatus,omitempty"`
+	ServerTimeout              int    `json:"serverTimeout,omitempty"`
+	RedirectPort               int    `json:"redirectPort,omitempty"`
+}
+
+// CreateLoadBalancerHTTPListener create HTTP listener on loadbalancer
+// You can read doc at https://cloud.baidu.com/doc/BLB/API.html#.C0.F3.F3.ED.5C.D8.4D.66.19.FF.DA.7A.0F.75.05.7C
+func (c *Client) CreateTCPListener(args *CreateTCPListenerArgs) (err error) {
+	params := map[string]string{
+		"clientToken": c.GenerateClientToken(),
+	}
+	if args == nil {
+		return fmt.Errorf("CreateTCPListener need args")
+	}
+	postContent, err := json.Marshal(args)
+	if err != nil {
+		return err
+	}
+	req, err := bce.NewRequest("POST", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/TCPlistener", params), bytes.NewReader(postContent))
+	if err != nil {
+		return err
+	}
+	_, err = c.SendRequest(req, nil)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// CreateLoadBalancerUDPListener create UDP listener on loadbalancer
+//
+// You can read doc at https://cloud.baidu.com/doc/BLB/API.html#.D7.A3.9B.E1.45.BD.9E.FA.B0.2F.60.12.B3.39.E8.9D
+func (c *Client) CreateUDPListener(args *CreateUDPListenerArgs) (err error) {
+	params := map[string]string{
+		"clientToken": c.GenerateClientToken(),
+	}
+	if args == nil {
+		return fmt.Errorf("CreateUDPListener need args")
+	}
+	postContent, err := json.Marshal(args)
+	if err != nil {
+		return err
+	}
+	req, err := bce.NewRequest("POST", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/UDPlistener", params), bytes.NewReader(postContent))
+	if err != nil {
+		return err
+	}
+	_, err = c.SendRequest(req, nil)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// CreateHTTPListener create HTTP listener on loadbalancer
+//
+// You can read doc at https://cloud.baidu.com/doc/BLB/API.html#.D7.A3.9B.E1.45.BD.9E.FA.B0.2F.60.12.B3.39.E8.9D
+func (c *Client) CreateHTTPListener(args *CreateHTTPListenerArgs) (err error) {
+	params := map[string]string{
+		"clientToken": c.GenerateClientToken(),
+	}
+	if args == nil {
+		return fmt.Errorf("CreateHTTPListener need args")
+	}
+	postContent, err := json.Marshal(args)
+	if err != nil {
+		return err
+	}
+	req, err := bce.NewRequest("POST", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/HTTPlistener", params), bytes.NewReader(postContent))
+	if err != nil {
+		return err
+	}
+	_, err = c.SendRequest(req, nil)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type DescribeTCPListenerArgs struct {
+	LoadBalancerId string
+	ListenerPort   int
+}
+type DescribeTCPListenerResponse struct {
+	Marker          string        `json:"marker"`
+	IsTruncated     bool          `json:"isTruncated"`
+	NextMarker      string        `json:"nextMarker"`
+	MaxKeys         int           `json:"maxKeys"`
+	TCPListenerList []TCPListener `json:"listenerList"`
+}
+
+// DescribeTCPListener Describe TCPListener
+// TODO: args need to validate
+func (c *Client) DescribeTCPListener(args *DescribeTCPListenerArgs) ([]TCPListener, error) {
+	if args == nil {
+		return nil, fmt.Errorf("DescribeTCPListener need args")
+	}
+	var params map[string]string
+	if args.ListenerPort != 0 {
+		params = map[string]string{
+			"listenerPort": strconv.Itoa(args.ListenerPort),
+		}
+	}
+	req, err := bce.NewRequest("GET", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/TCPlistener", params), nil)
+
+	if err != nil {
+		return nil, err
+	}
+	resp, err := c.SendRequest(req, nil)
+
+	if err != nil {
+		return nil, err
+	}
+	bodyContent, err := resp.GetBodyContent()
+
+	if err != nil {
+		return nil, err
+	}
+	var blbsResp *DescribeTCPListenerResponse
+	err = json.Unmarshal(bodyContent, &blbsResp)
+
+	if err != nil {
+		return nil, err
+	}
+	return blbsResp.TCPListenerList, nil
+}
+
+type DescribeUDPListenerArgs struct {
+	LoadBalancerId string
+	ListenerPort   int
+}
+type DescribeUDPListenerResponse struct {
+	Marker          string        `json:"marker"`
+	IsTruncated     bool          `json:"isTruncated"`
+	NextMarker      string        `json:"nextMarker"`
+	MaxKeys         int           `json:"maxKeys"`
+	UDPListenerList []UDPListener `json:"listenerList"`
+}
+
+// DescribeUDPListeners Describe UDPListeners
+// TODO: args need to validate
+func (c *Client) DescribeUDPListener(args *DescribeUDPListenerArgs) ([]UDPListener, error) {
+	if args == nil {
+		return nil, fmt.Errorf("DescribeUDPListeners need args")
+	}
+	var params map[string]string
+	if args.ListenerPort != 0 {
+		params = map[string]string{
+			"listenerPort": strconv.Itoa(args.ListenerPort),
+		}
+	}
+	req, err := bce.NewRequest("GET", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/UDPlistener", params), nil)
+
+	if err != nil {
+		return nil, err
+	}
+	resp, err := c.SendRequest(req, nil)
+
+	if err != nil {
+		return nil, err
+	}
+	bodyContent, err := resp.GetBodyContent()
+
+	if err != nil {
+		return nil, err
+	}
+	var blbsResp *DescribeUDPListenerResponse
+	err = json.Unmarshal(bodyContent, &blbsResp)
+
+	if err != nil {
+		return nil, err
+	}
+	return blbsResp.UDPListenerList, nil
+}
