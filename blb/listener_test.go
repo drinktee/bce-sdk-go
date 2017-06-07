@@ -85,3 +85,42 @@ func TestDescribeUDPListener(t *testing.T) {
 		fmt.Println(blb.ListenerPort)
 	}
 }
+func TestUpdateTCPListener(t *testing.T) {
+	blbClient.SetDebug(true)
+	args := &UpdateTCPListenerArgs{
+		LoadBalancerId: "lb-f5d263e5",
+		ListenerPort:   8080,
+		BackendPort:    9991,
+	}
+	err := blbClient.UpdateTCPListener(args)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestUpdateUDPListener(t *testing.T) {
+	blbClient.SetDebug(true)
+	args := &UpdateUDPListenerArgs{
+		LoadBalancerId:    "lb-f5d263e5",
+		ListenerPort:      8888,
+		BackendPort:       8019,
+		Scheduler:         "RoundRobin",
+		HealthCheckString: "A",
+	}
+	err := blbClient.UpdateUDPListener(args)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestDeleteListeners(t *testing.T) {
+	blbClient.SetDebug(true)
+	args := &DeleteListenersArgs{
+		LoadBalancerId: "lb-f5d263e5",
+		PortList:       []int{8899},
+	}
+	err := blbClient.DeleteListeners(args)
+	if err != nil {
+		t.Error(err)
+	}
+}

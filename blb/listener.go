@@ -288,3 +288,139 @@ func (c *Client) DescribeUDPListener(args *DescribeUDPListenerArgs) ([]UDPListen
 	}
 	return blbsResp.UDPListenerList, nil
 }
+
+type UpdateTCPListenerArgs struct {
+	LoadBalancerId             string `json:"-"`
+	ListenerPort               int    `json:"listenerPort"`
+	BackendPort                int    `json:"backendPort,omitempty"`
+	Scheduler                  string `json:"scheduler,omitempty"`
+	HealthCheckTimeoutInSecond int    `json:"healthCheckTimeoutInSecond,omitempty"`
+	HealthCheckInterval        int    `json:"healthCheckInterval,omitempty"`
+	UnhealthyThreshold         int    `json:"unhealthyThreshold,omitempty"`
+	HealthyThreshold           int    `json:"healthyThreshold,omitempty"`
+}
+
+// UpdateTCPListener update a TCPListener
+// TODO: args need to validate
+func (c *Client) UpdateTCPListener(args *UpdateTCPListenerArgs) error {
+
+	if args == nil || args.LoadBalancerId == "" || args.ListenerPort == 0 {
+		return fmt.Errorf("UpdateTCPListener need args")
+	}
+	var params map[string]string
+	if args.ListenerPort != 0 {
+		params = map[string]string{
+			"listenerPort": strconv.Itoa(args.ListenerPort),
+		}
+	}
+	postContent, err := json.Marshal(args)
+	if err != nil {
+		return err
+	}
+	req, err := bce.NewRequest("PUT", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/TCPlistener", params), bytes.NewReader(postContent))
+	if err != nil {
+		return err
+	}
+	_, err = c.SendRequest(req, nil)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type UpdateUDPListenerArgs struct {
+	LoadBalancerId             string `json:"-"`
+	ListenerPort               int    `json:"listenerPort"`
+	BackendPort                int    `json:"backendPort"`
+	Scheduler                  string `json:"scheduler"`
+	HealthCheckTimeoutInSecond int    `json:"healthCheckTimeoutInSecond,omitempty"`
+	HealthCheckInterval        int    `json:"healthCheckInterval,omitempty"`
+	UnhealthyThreshold         int    `json:"unhealthyThreshold,omitempty"`
+	HealthyThreshold           int    `json:"healthyThreshold,omitempty"`
+	HealthCheckString          string `json:"healthCheckString"`
+}
+
+func (args *UpdateUDPListenerArgs) validate() error {
+	if args.LoadBalancerId == "" {
+		return fmt.Errorf("UpdateUDPListener need LoadBalancerId")
+	}
+	if args.ListenerPort == 0 {
+		return fmt.Errorf("UpdateUDPListener need ListenerPort")
+	}
+	if args.BackendPort == 0 {
+		return fmt.Errorf("UpdateUDPListener need BackendPort")
+	}
+	if args.Scheduler == "" {
+		return fmt.Errorf("UpdateUDPListener need Scheduler")
+	}
+	if args.HealthCheckString == "" {
+		return fmt.Errorf("UpdateUDPListener need HealthCheckString")
+	}
+	return nil
+}
+
+// UpdateUDPListener update a UDPListener
+func (c *Client) UpdateUDPListener(args *UpdateUDPListenerArgs) error {
+	err := args.validate()
+	if err != nil {
+		return err
+	}
+	params := map[string]string{
+		"listenerPort": strconv.Itoa(args.ListenerPort),
+	}
+	postContent, err := json.Marshal(args)
+	if err != nil {
+		return err
+	}
+	req, err := bce.NewRequest("PUT", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/UDPlistener", params), bytes.NewReader(postContent))
+	if err != nil {
+		return err
+	}
+	_, err = c.SendRequest(req, nil)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+type DeleteListenersArgs struct {
+	LoadBalancerId string `json:"-"`
+	// action         string `json:"-"`
+	PortList []int `json:"portList"`
+}
+
+func (args *DeleteListenersArgs) validate() error {
+	if args.LoadBalancerId == "" {
+		return fmt.Errorf("DeleteListenersArgs need LoadBalancerId")
+	}
+	if args.PortList == nil {
+		return fmt.Errorf("DeleteListenersArgs need PortList")
+	}
+	return nil
+}
+
+// UpdateUDPListener update a UDPListener
+func (c *Client) DeleteListeners(args *DeleteListenersArgs) error {
+	err := args.validate()
+	if err != nil {
+		return err
+	}
+	params := map[string]string{
+		"batchdelete": "",
+		"clientToken": c.GenerateClientToken(),
+	}
+	postContent, err := json.Marshal(args)
+	if err != nil {
+		return err
+	}
+	// url := "http://" + Endpoint[c.GetRegion()] + "/v1/blb" + "/" + args.LoadBalancerId + "/listener?" + "batchdelete=&" + "clientToken=" + c.GenerateClientToken()
+	req, err := bce.NewRequest("PUT", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/listener", params), bytes.NewReader(postContent))
+	if err != nil {
+		return err
+	}
+	_, err = c.SendRequest(req, nil)
+	if err != nil {
+		return err
+	}
+	return nil
+}
