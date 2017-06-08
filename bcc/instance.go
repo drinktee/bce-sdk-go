@@ -70,7 +70,7 @@ func (c *Client) ListInstances(option *bce.SignOption) ([]Instance, error) {
 	return insList.Instances, nil
 }
 
-func (c *Client) GetInstance(instanceId string, option *bce.SignOption) (*Instance, error) {
+func (c *Client) DescribeInstance(instanceId string, option *bce.SignOption) (*Instance, error) {
 
 	req, err := bce.NewRequest("GET", c.GetURL("v2/instance"+"/"+instanceId, nil), nil)
 

@@ -37,7 +37,7 @@ func TestListInstances(t *testing.T) {
 
 func TestGetInstance(t *testing.T) {
 	bccClient.SetDebug(true)
-	ins, err := bccClient.GetInstance("i-5fOFPL5J", nil)
+	ins, err := bccClient.DescribeInstance("i-5fOFPL5J", nil)
 
 	if err != nil {
 		fmt.Println(err)
