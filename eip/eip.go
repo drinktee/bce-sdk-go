@@ -285,6 +285,9 @@ func (c *Client) GetEips(args *GetEipsArgs) ([]Eip, error) {
 		return nil, err
 	}
 	resp, err := c.SendRequest(req, nil)
+	if err != nil {
+		return nil, err
+	}
 	bodyContent, err := resp.GetBodyContent()
 
 	if err != nil {

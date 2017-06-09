@@ -90,7 +90,7 @@ func (c *Client) DescribeInstance(instanceId string, option *bce.SignOption) (*I
 		return nil, err
 	}
 
-	var ins *GetInstanceResponse
+	var ins GetInstanceResponse
 	err = json.Unmarshal(bodyContent, &ins)
 
 	if err != nil {
