@@ -2,12 +2,14 @@ package eip
 
 import (
 	"fmt"
+	"net/http/httptest"
 	"testing"
 )
 
-var testIP string
-
 func TestCreateEip(t *testing.T) {
+	ts := httptest.NewServer(EipHandler())
+	defer ts.Close()
+	eipClient.Endpoint = ts.URL
 	bill := &Billing{
 		PaymentTiming: "Postpaid",
 		BillingMethod: "ByTraffic",
@@ -17,15 +19,21 @@ func TestCreateEip(t *testing.T) {
 		Billing:         bill,
 		Name:            "golangtest",
 	}
-	ip, err := eipClient.CreateEip(args)
+	_, err := eipClient.CreateEip(args)
 	if err != nil {
 		t.Error(err)
 	}
-	fmt.Println(ip)
-	testIP = ip
+}
+
+var expectResizeEip = &ResizeEipArgs{
+	BandwidthInMbps: 111,
+	Ip:              "180.76.242.209",
 }
 
 func TestResizeEip(t *testing.T) {
+	ts := httptest.NewServer(EipHandler())
+	defer ts.Close()
+	eipClient.Endpoint = ts.URL
 	args := &ResizeEipArgs{
 		BandwidthInMbps: 111,
 		Ip:              "180.76.242.209",
@@ -36,7 +44,16 @@ func TestResizeEip(t *testing.T) {
 	}
 }
 
+var expectBindEip = &BindEipArgs{
+	Ip:           "180.76.242.209",
+	InstanceType: "BLB",
+	InstanceId:   "lb-f5d263e5",
+}
+
 func TestBindEip(t *testing.T) {
+	ts := httptest.NewServer(EipHandler())
+	defer ts.Close()
+	eipClient.Endpoint = ts.URL
 	args := &BindEipArgs{
 		Ip:           "180.76.242.209",
 		InstanceType: "BLB",
@@ -48,25 +65,33 @@ func TestBindEip(t *testing.T) {
 	}
 }
 
+var expectUnbindEip = &EipArgs{
+	Ip: "180.76.242.209",
+}
+
 func TestUnbindEip(t *testing.T) {
-	args := &EipArgs{
-		Ip: "180.76.242.209",
-	}
-	err := eipClient.UnbindEip(args)
+	ts := httptest.NewServer(EipHandler())
+	defer ts.Close()
+	eipClient.Endpoint = ts.URL
+	err := eipClient.UnbindEip(expectUnbindEip)
 	if err != nil {
 		t.Error(err)
 	}
 }
+
 func TestDeleteEip(t *testing.T) {
-	args := &EipArgs{
-		Ip: testIP,
-	}
-	err := eipClient.DeleteEip(args)
+	ts := httptest.NewServer(EipHandler())
+	defer ts.Close()
+	eipClient.Endpoint = ts.URL
+	err := eipClient.DeleteEip(expectUnbindEip)
 	if err != nil {
 		t.Error(err)
 	}
 }
 func TestGetEips(t *testing.T) {
+	ts := httptest.NewServer(EipHandler())
+	defer ts.Close()
+	eipClient.Endpoint = ts.URL
 	eips, err := eipClient.GetEips(nil)
 	if err != nil {
 		t.Error(err)
