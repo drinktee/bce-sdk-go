@@ -84,7 +84,7 @@ func NewCredentialsFromFile(filePath string) (*Credentials, error) {
 // Config contains all options for bce.Client.
 type Config struct {
 	*Credentials
-	Region     string
+	Region     string `json:"region"`
 	Endpoint   string
 	APIVersion string
 	Protocol   string
@@ -98,11 +98,26 @@ type Config struct {
 	Checksum       bool
 }
 
+// NewConfig create a config from credentials
 func NewConfig(credentials *Credentials) *Config {
 	return &Config{
 		Credentials: credentials,
 		Region:      Region["bj"],
 	}
+}
+
+// NewConfigFromFile create a new config from cloud config.
+func NewConfigFromFile(filePath string) (*Config, error) {
+	bytes, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return nil, err
+	}
+	var c *Config
+	err = json.Unmarshal(bytes, &c)
+	if err != nil {
+		return nil, err
+	}
+	return c, nil
 }
 
 // GetRegion gets region from bce.Config.

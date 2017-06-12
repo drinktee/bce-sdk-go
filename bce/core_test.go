@@ -734,3 +734,12 @@ func TestNewCredentialsFromFile(t *testing.T) {
 		}
 	}
 }
+
+func TestNewConfigFromFile(t *testing.T) {
+	c, err := NewConfigFromFile("aksk.json")
+	if err != nil {
+		t.Error(err)
+	} else {
+		fmt.Printf("%+v", c)
+	}
+}
