@@ -217,6 +217,7 @@ func (c *Client) DescribeVolume(id string) (*Volume, error) {
 	return ins.Volume, nil
 }
 
+// AttachCDSVolumeArgs describe attachcds args
 type AttachCDSVolumeArgs struct {
 	VolumeId   string `json:"-"`
 	InstanceId string `json:"instanceId"`
@@ -274,6 +275,7 @@ func (c *Client) AttachCDSVolume(args *AttachCDSVolumeArgs) (*VolumeAttachment, 
 }
 
 // DetachCDSVolume detach a cds
+// TODO: if a volume is ddetaching, need to wait
 func (c *Client) DetachCDSVolume(args *AttachCDSVolumeArgs) error {
 	err := args.validate()
 	if err != nil {
@@ -296,4 +298,35 @@ func (c *Client) DetachCDSVolume(args *AttachCDSVolumeArgs) error {
 		return err
 	}
 	return nil
+}
+
+// DeleteCDS delete a cds
+func (c *Client) DeleteCDS(volumeID string) error {
+	if volumeID == "" {
+		return fmt.Errorf("DeleteCDS need a volumeId")
+	}
+	params := map[string]string{
+		"clientToken": c.GenerateClientToken(),
+	}
+	req, err := bce.NewRequest("DELETE", c.GetURL("v2/volume"+"/"+volumeID, params), nil)
+	if err != nil {
+		return err
+	}
+	_, err = c.SendRequest(req, nil)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// RollbackVolume rollback a volume
+// TODO
+func (c *Client) RollbackVolume() {
+
+}
+
+// PurchaseReservedVolume purchaseReserved a volume
+// TODO
+func (c *Client) PurchaseReservedVolume() {
+
 }

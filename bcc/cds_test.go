@@ -77,6 +77,24 @@ func TestAttachCDSVolume(t *testing.T) {
 	att, err := bccClient.AttachCDSVolume(expectAttach)
 	if err != nil {
 		t.Error(err)
+	} else {
+		fmt.Println(att.Device)
 	}
-	fmt.Println(att.Device)
+
+}
+
+func TestDetachCDSVolume(t *testing.T) {
+	bccClient.SetDebug(true)
+	err := bccClient.DetachCDSVolume(expectAttach)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestDeleteCDSVolume(t *testing.T) {
+	bccClient.SetDebug(true)
+	err := bccClient.DeleteCDS("v-JCvK3cpI")
+	if err != nil {
+		t.Error(err)
+	}
 }
