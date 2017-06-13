@@ -129,7 +129,7 @@ func (args *UpdateBackendServersArgs) validate() error {
 	return nil
 }
 
-// UpdateBackendServers update a BackendServers
+// UpdateBackendServers update  BackendServers
 func (c *Client) UpdateBackendServers(args *UpdateBackendServersArgs) error {
 	err := args.validate()
 	if err != nil {

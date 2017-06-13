@@ -1,4 +1,5 @@
 {
     "AccessKeyID":"aaa",
-    "SecretAccessKey":"bbb"
+    "SecretAccessKey":"bbb",
+    "region":"ccc"
 }

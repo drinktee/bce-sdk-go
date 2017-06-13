@@ -48,9 +48,9 @@ func TestDescribeLoadBalancers(t *testing.T) {
 
 	if err != nil {
 		fmt.Println(err)
-		t.Error(util.FormatTest("ListInstances", err.Error(), "nil"))
+		t.Error(util.FormatTest("TestDescribeLoadBalancers", err.Error(), "nil"))
 	}
-
+	fmt.Println(len(list))
 	for _, blb := range list {
 		fmt.Println(blb.PublicIp)
 	}
