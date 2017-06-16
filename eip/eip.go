@@ -88,7 +88,7 @@ func (c *Client) CreateEip(args *CreateEipArgs) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	req, err := bce.NewRequest("POST", c.GetURL("v1/eip", params), bytes.NewReader(postContent))
+	req, err := bce.NewRequest("POST", c.GetURL("v1/eip", params), bytes.NewBuffer(postContent))
 	if err != nil {
 		return "", err
 	}
@@ -143,8 +143,8 @@ func (c *Client) ResizeEip(args *ResizeEipArgs) error {
 		return err
 	}
 	// url := "http://" + Endpoint[c.GetRegion()] + "/v1/eip" + "/" + args.Ip + "?" + "resize&" + "clientToken=" + c.GenerateClientToken()
-	// req, err := bce.NewRequest("PUT", url, bytes.NewReader(postContent))
-	req, err := bce.NewRequest("PUT", c.GetURL("v1/eip"+"/"+args.Ip, params), bytes.NewReader(postContent))
+	// req, err := bce.NewRequest("PUT", url, bytes.NewBuffer(postContent))
+	req, err := bce.NewRequest("PUT", c.GetURL("v1/eip"+"/"+args.Ip, params), bytes.NewBuffer(postContent))
 	if err != nil {
 		return err
 	}
@@ -191,7 +191,7 @@ func (c *Client) BindEip(args *BindEipArgs) error {
 	if err != nil {
 		return err
 	}
-	req, err := bce.NewRequest("PUT", c.GetURL("v1/eip"+"/"+args.Ip, params), bytes.NewReader(postContent))
+	req, err := bce.NewRequest("PUT", c.GetURL("v1/eip"+"/"+args.Ip, params), bytes.NewBuffer(postContent))
 	if err != nil {
 		return err
 	}

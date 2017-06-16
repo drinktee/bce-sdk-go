@@ -495,7 +495,7 @@ func (c *Client) GetSessionToken(sessionTokenRequest SessionTokenRequest,
 		uriPath = "v1/" + uriPath
 	}
 
-	req, err := NewRequest("POST", c.GetURL("sts.bj.baidubce.com", uriPath, params), bytes.NewReader(body))
+	req, err := NewRequest("POST", c.GetURL("sts.bj.baidubce.com", uriPath, params), bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err

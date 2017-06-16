@@ -49,7 +49,7 @@ func (c *Client) AddBackendServers(args *AddBackendServersArgs) error {
 	if err != nil {
 		return err
 	}
-	req, err := bce.NewRequest("POST", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/backendserver", params), bytes.NewReader(postContent))
+	req, err := bce.NewRequest("POST", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/backendserver", params), bytes.NewBuffer(postContent))
 	if err != nil {
 		return err
 	}
@@ -143,7 +143,7 @@ func (c *Client) UpdateBackendServers(args *UpdateBackendServersArgs) error {
 	if err != nil {
 		return err
 	}
-	req, err := bce.NewRequest("PUT", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/backendserver", params), bytes.NewReader(postContent))
+	req, err := bce.NewRequest("PUT", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/backendserver", params), bytes.NewBuffer(postContent))
 	if err != nil {
 		return err
 	}
@@ -185,7 +185,7 @@ func (c *Client) RemoveBackendServers(args *RemoveBackendServersArgs) error {
 	if err != nil {
 		return err
 	}
-	req, err := bce.NewRequest("PUT", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/backendserver", params), bytes.NewReader(postContent))
+	req, err := bce.NewRequest("PUT", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/backendserver", params), bytes.NewBuffer(postContent))
 	if err != nil {
 		return err
 	}

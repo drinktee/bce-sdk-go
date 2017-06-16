@@ -106,7 +106,7 @@ func (c *Client) CreateLoadBalancer(args *CreateLoadBalancerArgs) (*CreateLoadBa
 	if err != nil {
 		return nil, err
 	}
-	req, err := bce.NewRequest("POST", c.GetURL("v1/blb", params), bytes.NewReader(postContent))
+	req, err := bce.NewRequest("POST", c.GetURL("v1/blb", params), bytes.NewBuffer(postContent))
 	if err != nil {
 		return nil, err
 	}
@@ -141,7 +141,7 @@ func (c *Client) UpdateLoadBalancer(args *UpdateLoadBalancerArgs) error {
 	if err != nil {
 		return err
 	}
-	req, err := bce.NewRequest("PUT", c.GetURL("v1/blb"+"/"+args.LoadBalancerId, params), bytes.NewReader(postContent))
+	req, err := bce.NewRequest("PUT", c.GetURL("v1/blb"+"/"+args.LoadBalancerId, params), bytes.NewBuffer(postContent))
 	if err != nil {
 		return err
 	}

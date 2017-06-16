@@ -132,7 +132,7 @@ func (c *Client) CreateTCPListener(args *CreateTCPListenerArgs) (err error) {
 	if err != nil {
 		return err
 	}
-	req, err := bce.NewRequest("POST", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/TCPlistener", params), bytes.NewReader(postContent))
+	req, err := bce.NewRequest("POST", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/TCPlistener", params), bytes.NewBuffer(postContent))
 	if err != nil {
 		return err
 	}
@@ -157,7 +157,7 @@ func (c *Client) CreateUDPListener(args *CreateUDPListenerArgs) (err error) {
 	if err != nil {
 		return err
 	}
-	req, err := bce.NewRequest("POST", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/UDPlistener", params), bytes.NewReader(postContent))
+	req, err := bce.NewRequest("POST", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/UDPlistener", params), bytes.NewBuffer(postContent))
 	if err != nil {
 		return err
 	}
@@ -182,7 +182,7 @@ func (c *Client) CreateHTTPListener(args *CreateHTTPListenerArgs) (err error) {
 	if err != nil {
 		return err
 	}
-	req, err := bce.NewRequest("POST", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/HTTPlistener", params), bytes.NewReader(postContent))
+	req, err := bce.NewRequest("POST", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/HTTPlistener", params), bytes.NewBuffer(postContent))
 	if err != nil {
 		return err
 	}
@@ -317,7 +317,7 @@ func (c *Client) UpdateTCPListener(args *UpdateTCPListenerArgs) error {
 	if err != nil {
 		return err
 	}
-	req, err := bce.NewRequest("PUT", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/TCPlistener", params), bytes.NewReader(postContent))
+	req, err := bce.NewRequest("PUT", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/TCPlistener", params), bytes.NewBuffer(postContent))
 	if err != nil {
 		return err
 	}
@@ -372,7 +372,7 @@ func (c *Client) UpdateUDPListener(args *UpdateUDPListenerArgs) error {
 	if err != nil {
 		return err
 	}
-	req, err := bce.NewRequest("PUT", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/UDPlistener", params), bytes.NewReader(postContent))
+	req, err := bce.NewRequest("PUT", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/UDPlistener", params), bytes.NewBuffer(postContent))
 	if err != nil {
 		return err
 	}
@@ -414,7 +414,7 @@ func (c *Client) DeleteListeners(args *DeleteListenersArgs) error {
 		return err
 	}
 	// url := "http://" + Endpoint[c.GetRegion()] + "/v1/blb" + "/" + args.LoadBalancerId + "/listener?" + "batchdelete=&" + "clientToken=" + c.GenerateClientToken()
-	req, err := bce.NewRequest("PUT", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/listener", params), bytes.NewReader(postContent))
+	req, err := bce.NewRequest("PUT", c.GetURL("v1/blb"+"/"+args.LoadBalancerId+"/listener", params), bytes.NewBuffer(postContent))
 	if err != nil {
 		return err
 	}

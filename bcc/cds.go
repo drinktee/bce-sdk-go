@@ -123,7 +123,7 @@ func (c *Client) CreateVolumes(args *CreateVolumeArgs) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	req, err := bce.NewRequest("POST", c.GetURL("v2/volume", params), bytes.NewReader(postContent))
+	req, err := bce.NewRequest("POST", c.GetURL("v2/volume", params), bytes.NewBuffer(postContent))
 	if err != nil {
 		return nil, err
 	}
@@ -253,7 +253,7 @@ func (c *Client) AttachCDSVolume(args *AttachCDSVolumeArgs) (*VolumeAttachment, 
 	if err != nil {
 		return nil, err
 	}
-	req, err := bce.NewRequest("PUT", c.GetURL("v2/volume"+"/"+args.VolumeId, params), bytes.NewReader(postContent))
+	req, err := bce.NewRequest("PUT", c.GetURL("v2/volume"+"/"+args.VolumeId, params), bytes.NewBuffer(postContent))
 	if err != nil {
 		return nil, err
 	}
@@ -289,7 +289,7 @@ func (c *Client) DetachCDSVolume(args *AttachCDSVolumeArgs) error {
 	if err != nil {
 		return err
 	}
-	req, err := bce.NewRequest("PUT", c.GetURL("v2/volume"+"/"+args.VolumeId, params), bytes.NewReader(postContent))
+	req, err := bce.NewRequest("PUT", c.GetURL("v2/volume"+"/"+args.VolumeId, params), bytes.NewBuffer(postContent))
 	if err != nil {
 		return err
 	}
