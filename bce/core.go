@@ -551,16 +551,25 @@ func (c *Client) SendRequest(req *Request, option *SignOption) (bceResponse *Res
 		}
 
 		resp, httpError := c.httpClient.Do(req.raw())
-
+		bceResponse = NewResponse(resp)
 		if c.debug {
 			statusCode := -1
-
+			resString := ""
+			var resHead http.Header
 			if resp != nil {
 				statusCode = resp.StatusCode
+				re, err := bceResponse.GetBodyContent()
+				if err != nil {
+					util.Debug("", fmt.Sprintf("getbodycontent error: %v", err))
+				}
+				resString = string(re)
+				resHead = resp.Header
 			}
 
 			util.Debug("", fmt.Sprintf("Response: status code = %d, httpMethod = %s, requestUrl = %s",
 				statusCode, req.Method, req.URL.String()))
+			util.Debug("", fmt.Sprintf("Response Header:  = %v", resHead))
+			util.Debug("", fmt.Sprintf("Response body:  = %s", resString))
 		}
 
 		if httpError != nil {
@@ -575,8 +584,6 @@ func (c *Client) SendRequest(req *Request, option *SignOption) (bceResponse *Res
 			}
 
 		}
-
-		bceResponse = NewResponse(resp)
 
 		if resp.StatusCode >= http.StatusBadRequest {
 			err = buildError(bceResponse)
