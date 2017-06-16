@@ -205,6 +205,9 @@ func (policy *DefaultRetryPolicy) shouldRetry(err error, retriesAttempted int) b
 			log.Println("Retry for service unavailable.")
 			return true
 		}
+	} else {
+		log.Printf("Retry for unknow error: %s", err.Error())
+		return true
 	}
 
 	return false

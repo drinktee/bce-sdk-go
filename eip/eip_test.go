@@ -68,7 +68,7 @@ func TestBindEip(t *testing.T) {
 }
 
 var expectUnbindEip = &EipArgs{
-	Ip: "180.76.247.180",
+	Ip: "180.76.247.182",
 }
 
 func TestUnbindEip(t *testing.T) {
