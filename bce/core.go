@@ -552,10 +552,12 @@ func (c *Client) SendRequest(req *Request, option *SignOption) (bceResponse *Res
 			util.Debug("", fmt.Sprintf("Request: httpMethod = %s, requestUrl = %s, requestHeader = %v",
 				req.Method, req.URL.String(), req.Header))
 		}
-
+		t0 := time.Now()
 		resp, httpError := c.httpClient.Do(req.raw())
+		t1 := time.Now()
 		bceResponse = NewResponse(resp)
 		if c.debug {
+			util.Debug("", fmt.Sprintf("http request: %s  do use time: %v", req.URL.String(), t1.Sub(t0)))
 			statusCode := -1
 			resString := ""
 			var resHead http.Header
