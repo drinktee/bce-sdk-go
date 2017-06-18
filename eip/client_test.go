@@ -9,6 +9,8 @@ import (
 
 	"io/ioutil"
 
+	"time"
+
 	"github.com/drinktee/bce-sdk-go/bce"
 )
 
@@ -21,6 +23,7 @@ func init() {
 	var bceConfig = &bce.Config{
 		Credentials: credentials,
 		Checksum:    true,
+		Timeout:     5 * time.Second,
 		Region:      os.Getenv("BOS_REGION"),
 	}
 	var bccConfig = NewConfig(bceConfig)
@@ -31,6 +34,9 @@ func init() {
 func EipHandler() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/v1/eip", func(w http.ResponseWriter, r *http.Request) {
+		// buff, _ := ioutil.ReadAll(r.Body)
+		// fmt.Println("body is : %s", string(buff))
+		// time.Sleep(10 * time.Second)
 		handleCreateGetEip(w, r)
 	})
 	mux.HandleFunc("/v1/eip/", func(w http.ResponseWriter, r *http.Request) {

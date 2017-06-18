@@ -538,6 +538,10 @@ func (c *Client) SendRequest(req *Request, option *SignOption) (bceResponse *Res
 	if c.RetryPolicy == nil {
 		c.RetryPolicy = NewDefaultRetryPolicy(3, 20*time.Second)
 	}
+	var buf []byte
+	if req.Body != nil {
+		buf, _ = ioutil.ReadAll(req.Body)
+	}
 
 	for i := 0; ; i++ {
 		bceResponse, err = nil, nil
@@ -553,6 +557,7 @@ func (c *Client) SendRequest(req *Request, option *SignOption) (bceResponse *Res
 				req.Method, req.URL.String(), req.Header))
 		}
 		t0 := time.Now()
+		req.Body = ioutil.NopCloser(bytes.NewBuffer(buf))
 		resp, httpError := c.httpClient.Do(req.raw())
 		t1 := time.Now()
 		bceResponse = NewResponse(resp)
@@ -582,7 +587,7 @@ func (c *Client) SendRequest(req *Request, option *SignOption) (bceResponse *Res
 
 			if duration <= 0 {
 				err = httpError
-				return
+				return bceResponse, err
 			} else {
 				time.Sleep(duration)
 				continue
@@ -595,13 +600,13 @@ func (c *Client) SendRequest(req *Request, option *SignOption) (bceResponse *Res
 		}
 
 		if err == nil {
-			return
+			return bceResponse, err
 		}
 
 		duration := c.RetryPolicy.GetDelayBeforeNextRetry(err, i+1)
 
 		if duration <= 0 {
-			return
+			return bceResponse, err
 		}
 
 		time.Sleep(duration)

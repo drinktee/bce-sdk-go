@@ -7,9 +7,9 @@ import (
 )
 
 func TestCreateEip(t *testing.T) {
-	// ts := httptest.NewServer(EipHandler())
-	// defer ts.Close()
-	// eipClient.Endpoint = ts.URL
+	ts := httptest.NewServer(EipHandler())
+	defer ts.Close()
+	eipClient.Endpoint = ts.URL
 	bill := &Billing{
 		PaymentTiming: "Postpaid",
 		BillingMethod: "ByTraffic",
