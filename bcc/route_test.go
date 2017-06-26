@@ -10,10 +10,10 @@ func TestListRouteTable(t *testing.T) {
 	// defer ts.Close()
 	// eipClient.Endpoint = ts.URL
 	// eips, err := eipClient.GetEips(nil)
-	bccClient.Endpoint = "bcc.bce-api.baidu.com"
+	// bccClient.Endpoint = "bcc.bce-api.baidu.com"
 	bccClient.SetDebug(true)
 	args := ListRouteArgs{
-		VpcID: "vpc-y9f84g5peuzi",
+		VpcID: "45d38bda-00b1-4146-a40a-27885d473353",
 	}
 	rs, err := bccClient.ListRouteTable(&args)
 	if err != nil {
@@ -21,17 +21,18 @@ func TestListRouteTable(t *testing.T) {
 	}
 	for _, r := range rs {
 		// fmt.Printf("%+v", r)
-		fmt.Println(r.NexthopID)
+		fmt.Println(r.RouteRuleID)
+		// fmt.Println(r.NexthopID)
 	}
 }
 
 func TestCreateRouteRule(t *testing.T) {
-	bccClient.Endpoint = "bcc.bce-api.baidu.com"
+	// bccClient.Endpoint = "bcc.bce-api.baidu.com"
 	args := CreateRouteRuleArgs{
-		RouteTableID:       "rt-kq2wgkeshqqy",
+		RouteTableID:       "rt-wc5rd05e8fzs",
 		SourceAddress:      "0.0.0.0/0",
 		DestinationAddress: "172.17.112.0/24",
-		NexthopID:          "i-zcimqrvw",
+		NexthopID:          "i-ddUE7vVn",
 		NexthopType:        "custom",
 		Description:        "a",
 	}
@@ -43,8 +44,8 @@ func TestCreateRouteRule(t *testing.T) {
 }
 
 func TestDeleteRoute(t *testing.T) {
-	bccClient.Endpoint = "bcc.bce-api.baidu.com"
-	err := bccClient.DeleteRoute("rr-zrsr6sacnytq")
+	// bccClient.Endpoint = "bcc.bce-api.baidu.com"
+	err := bccClient.DeleteRoute("rr-p9dbxrxdcsrh")
 	if err != nil {
 		t.Error(err)
 	}

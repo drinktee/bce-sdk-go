@@ -10,7 +10,7 @@ func TestListVpc(t *testing.T) {
 	// defer ts.Close()
 	// eipClient.Endpoint = ts.URL
 	// eips, err := eipClient.GetEips(nil)
-	bccClient.Endpoint = "bcc.bce-api.baidu.com"
+	// bccClient.Endpoint = "bcc.bce-api.baidu.com"
 	args := ListVpcArgs{
 		IsDefault: false,
 	}
@@ -20,5 +20,6 @@ func TestListVpc(t *testing.T) {
 	}
 	for _, vpc := range vpcs {
 		fmt.Println(vpc.VpcID)
+		fmt.Println(vpc.Name)
 	}
 }

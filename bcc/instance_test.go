@@ -3,17 +3,18 @@ package bcc
 import (
 	"testing"
 
-	"net/http/httptest"
+	"fmt"
 
 	"github.com/drinktee/bce-sdk-go/util"
 )
 
 func TestDescribeInstance(t *testing.T) {
-	ts := httptest.NewServer(InstancesHandler())
-	defer ts.Close()
-	// bccClient.SetDebug(true)
-	bccClient.Endpoint = ts.URL
-	ins, err := bccClient.DescribeInstance("i-YufwpQAe", nil)
+	// ts := httptest.NewServer(InstancesHandler())
+	// defer ts.Close()
+	bccClient.SetDebug(true)
+	// bccClient.Endpoint = ts.URL
+	// ins, err := bccClient.DescribeInstance("i-YufwpQAe", nil)
+	ins, err := bccClient.DescribeInstance("i-vfBlsqNG", nil)
 	if err != nil {
 		t.Error(util.FormatTest("ListInstances", err.Error(), "nil"))
 	}
@@ -23,16 +24,20 @@ func TestDescribeInstance(t *testing.T) {
 }
 
 func TestListInstances(t *testing.T) {
-	ts := httptest.NewServer(InstancesHandler())
-	defer ts.Close()
-	bccClient.Endpoint = ts.URL
+	// ts := httptest.NewServer(InstancesHandler())
+	// defer ts.Close()
+	// bccClient.Endpoint = ts.URL
+	// bccClient.Endpoint = "bcc.bce-api.baidu.com"
+	bccClient.SetDebug(true)
 	list, err := bccClient.ListInstances(nil)
+
 	if err != nil {
 		t.Error(util.FormatTest("ListInstances", err.Error(), "nil"))
 	}
 	for _, ins := range list {
+		fmt.Println(ins.VpcId)
 		if ins.InstanceId != "i-IyWRtII7" {
-			t.Error("instanceId error")
+			// t.Error("instanceId error")
 		}
 	}
 }
