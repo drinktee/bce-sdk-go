@@ -6,6 +6,7 @@ import (
 	"github.com/drinktee/bce-sdk-go/bcc"
 	"github.com/drinktee/bce-sdk-go/bce"
 	"github.com/drinktee/bce-sdk-go/blb"
+	"github.com/drinktee/bce-sdk-go/cce"
 	"github.com/drinktee/bce-sdk-go/eip"
 )
 
@@ -14,6 +15,7 @@ type Interface interface {
 	Bcc() *bcc.Client
 	Blb() *blb.Client
 	Eip() *eip.Client
+	Cce() *cce.Client
 }
 
 // Clientset contains the clients for groups.
@@ -21,6 +23,7 @@ type Clientset struct {
 	BccClient *bcc.Client
 	BlbClient *blb.Client
 	EipClient *eip.Client
+	CceClient *cce.Client
 }
 
 // Bcc retrieves the BccClient
@@ -47,6 +50,14 @@ func (c *Clientset) Eip() *eip.Client {
 	return c.EipClient
 }
 
+// Cce retrieves the CceClient
+func (c *Clientset) Cce() *cce.Client {
+	if c == nil {
+		return nil
+	}
+	return c.CceClient
+}
+
 // NewFromConfig create a new Clientset for the given config.
 func NewFromConfig(cfg *bce.Config) (*Clientset, error) {
 	if cfg == nil {
@@ -56,9 +67,11 @@ func NewFromConfig(cfg *bce.Config) (*Clientset, error) {
 	bccConfig := bcc.NewConfig(cfg)
 	blbConfig := blb.NewConfig(cfg)
 	eipConfig := eip.NewConfig(cfg)
+	cceConfig := cce.NewConfig(cfg)
 	cs.BccClient = bcc.NewClient(bccConfig)
 	cs.BlbClient = blb.NewBLBClient(blbConfig)
 	cs.EipClient = eip.NewEIPClient(eipConfig)
+	cs.CceClient = cce.NewClient(cceConfig)
 	return &cs, nil
 
 }
