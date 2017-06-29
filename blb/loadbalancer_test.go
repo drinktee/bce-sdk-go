@@ -8,25 +8,10 @@ import (
 	"github.com/drinktee/bce-sdk-go/util"
 )
 
-// var credentials, _ = bce.NewCredentialsFromFile("../aksk-test.json")
-
-// //var bceConfig = bce.NewConfig(credentials)
-// var bceConfig = &bce.Config{
-// 	Credentials: credentials,
-// 	Checksum:    true,
-// 	Region:      os.Getenv("BOS_REGION"),
-// }
-// var bccConfig = NewConfig(bceConfig)
-// var blbClient = NewBLBClient(bccConfig)
-
-// func TestCredentials(t *testing.T) {
-// 	fmt.Println(credentials.AccessKeyID)
-// 	fmt.Println(credentials.SecretAccessKey)
-// }
 func TestCreateLoadBalance(t *testing.T) {
 	blbClient.SetDebug(true)
 	args := &CreateLoadBalancerArgs{
-		Name: "golang-sdk-blb2",
+		Name: "golang-sun123",
 	}
 	blb, err := blbClient.CreateLoadBalancer(args)
 
@@ -40,9 +25,10 @@ func TestCreateLoadBalance(t *testing.T) {
 }
 
 func TestDescribeLoadBalancers(t *testing.T) {
+	// blbClient.Endpoint = "bcc.bce-api.baidu.com"
 	blbClient.SetDebug(true)
 	args := &DescribeLoadBalancersArgs{
-		LoadBalancerName: "blb-test",
+		LoadBalancerName: "bakendtest",
 	}
 	list, err := blbClient.DescribeLoadBalancers(args)
 
@@ -59,8 +45,8 @@ func TestDescribeLoadBalancers(t *testing.T) {
 func TestUpdateLoadBalancer(t *testing.T) {
 	blbClient.SetDebug(true)
 	args := &UpdateLoadBalancerArgs{
-		LoadBalancerId: "lb-f9b682b2",
-		Name:           "golang-name2",
+		LoadBalancerId: "lb-e5b33752",
+		Name:           "golang-123",
 	}
 	err := blbClient.UpdateLoadBalancer(args)
 	if err != nil {
@@ -71,7 +57,7 @@ func TestUpdateLoadBalancer(t *testing.T) {
 func TestDeleteLoadBalancer(t *testing.T) {
 	blbClient.SetDebug(true)
 	args := &DeleteLoadBalancerArgs{
-		LoadBalancerId: "lb-f9b682b2",
+		LoadBalancerId: "lb-426fad2b",
 	}
 	err := blbClient.DeleteLoadBalancer(args)
 	if err != nil {

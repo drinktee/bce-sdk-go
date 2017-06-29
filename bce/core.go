@@ -533,8 +533,8 @@ func (c *Client) SendRequest(req *Request, option *SignOption) (bceResponse *Res
 	}
 
 	option.AddHeader("User-Agent", c.GetUserAgent())
-	option.AddHeader("ContentType", "application/json")
-
+	option.AddHeader("Content-Type", "application/json")
+	// req.addHeader("Content-Type", "application/json")
 	if c.RetryPolicy == nil {
 		c.RetryPolicy = NewDefaultRetryPolicy(3, 20*time.Second)
 	}

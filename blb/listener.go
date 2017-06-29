@@ -291,7 +291,7 @@ func (c *Client) DescribeUDPListener(args *DescribeUDPListenerArgs) ([]UDPListen
 
 type UpdateTCPListenerArgs struct {
 	LoadBalancerId             string `json:"-"`
-	ListenerPort               int    `json:"listenerPort"`
+	ListenerPort               int    `json:"-"`
 	BackendPort                int    `json:"backendPort,omitempty"`
 	Scheduler                  string `json:"scheduler,omitempty"`
 	HealthCheckTimeoutInSecond int    `json:"healthCheckTimeoutInSecond,omitempty"`

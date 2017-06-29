@@ -64,10 +64,12 @@ func NewFromConfig(cfg *bce.Config) (*Clientset, error) {
 		return nil, fmt.Errorf("Config cannot be nil")
 	}
 	var cs Clientset
+	var cceCfg = *cfg
 	bccConfig := bcc.NewConfig(cfg)
 	blbConfig := blb.NewConfig(cfg)
 	eipConfig := eip.NewConfig(cfg)
-	cceConfig := cce.NewConfig(cfg)
+	// cce endpoint is different
+	cceConfig := cce.NewConfig(&cceCfg)
 	cs.BccClient = bcc.NewClient(bccConfig)
 	cs.BlbClient = blb.NewBLBClient(blbConfig)
 	cs.EipClient = eip.NewEIPClient(eipConfig)

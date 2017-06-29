@@ -14,7 +14,7 @@ func TestDescribeInstance(t *testing.T) {
 	bccClient.SetDebug(true)
 	// bccClient.Endpoint = ts.URL
 	// ins, err := bccClient.DescribeInstance("i-YufwpQAe", nil)
-	ins, err := bccClient.DescribeInstance("i-vfBlsqNG", nil)
+	ins, err := bccClient.DescribeInstance("i-7VUJvwqR", nil)
 	if err != nil {
 		t.Error(util.FormatTest("ListInstances", err.Error(), "nil"))
 	}

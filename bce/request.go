@@ -35,7 +35,6 @@ func NewRequest(method, url string, body io.Reader) (*Request, error) {
 	}
 
 	req := (*Request)(rawRequest)
-
 	return req, err
 }
 

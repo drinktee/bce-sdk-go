@@ -28,15 +28,12 @@ func init() {
 	}
 	var bccConfig = NewConfig(bceConfig)
 	eipClient = NewEIPClient(bccConfig)
-	eipClient.SetDebug(false)
+	eipClient.SetDebug(true)
 }
 
 func EipHandler() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/v1/eip", func(w http.ResponseWriter, r *http.Request) {
-		// buff, _ := ioutil.ReadAll(r.Body)
-		// fmt.Println("body is : %s", string(buff))
-		// time.Sleep(10 * time.Second)
 		handleCreateGetEip(w, r)
 	})
 	mux.HandleFunc("/v1/eip/", func(w http.ResponseWriter, r *http.Request) {

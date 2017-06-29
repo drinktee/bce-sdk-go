@@ -10,14 +10,14 @@ import (
 func TestAddBackendServers(t *testing.T) {
 	blbClient.SetDebug(true)
 	args := &AddBackendServersArgs{
-		LoadBalancerId: "lb-f5d263e5",
+		LoadBalancerId: "lb-e5b33752",
 		BackendServerList: []BackendServer{
 			BackendServer{
-				InstanceId: "i-dSo6P8oU",
+				InstanceId: "i-YWIy3FQx",
 				Weight:     50,
 			},
 			BackendServer{
-				InstanceId: "i-3VgKJmSh",
+				InstanceId: "i-vfBlsqNG",
 				Weight:     50,
 			},
 		},
@@ -31,7 +31,7 @@ func TestAddBackendServers(t *testing.T) {
 func TestDescribeBackendServers(t *testing.T) {
 	blbClient.SetDebug(true)
 	args := &DescribeBackendServersArgs{
-		LoadBalancerId: "lb-f5d263e5",
+		LoadBalancerId: "lb-e5b33752",
 	}
 	list, err := blbClient.DescribeBackendServers(args)
 
@@ -48,8 +48,11 @@ func TestDescribeBackendServers(t *testing.T) {
 func TestUpdateBackendServers(t *testing.T) {
 	blbClient.SetDebug(true)
 	args := &UpdateBackendServersArgs{
-		LoadBalancerId:    "lb-f5d263e5",
-		BackendServerList: []BackendServer{},
+		LoadBalancerId: "lb-e5b33752",
+		BackendServerList: []BackendServer{BackendServer{
+			InstanceId: "i-vfBlsqNG",
+			Weight:     99,
+		}},
 	}
 	err := blbClient.UpdateBackendServers(args)
 	if err != nil {
@@ -60,8 +63,8 @@ func TestUpdateBackendServers(t *testing.T) {
 func TestRemoveBackendServers(t *testing.T) {
 	blbClient.SetDebug(true)
 	args := &RemoveBackendServersArgs{
-		LoadBalancerId:    "lb-f5d263e5",
-		BackendServerList: []string{"i-dSo6P8oU"},
+		LoadBalancerId:    "lb-e5b33752",
+		BackendServerList: []string{"i-vfBlsqNG", "i-vfBlsqNG"},
 	}
 
 	err := blbClient.RemoveBackendServers(args)

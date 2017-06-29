@@ -7,9 +7,10 @@ import (
 )
 
 func TestCreateEip(t *testing.T) {
-	ts := httptest.NewServer(EipHandler())
-	defer ts.Close()
-	eipClient.Endpoint = ts.URL
+	// ts := httptest.NewServer(EipHandler())
+	// defer ts.Close()
+	// eipClient.Endpoint = ts.URL
+	eipClient.SetDebug(true)
 	bill := &Billing{
 		PaymentTiming: "Postpaid",
 		BillingMethod: "ByTraffic",
@@ -17,7 +18,7 @@ func TestCreateEip(t *testing.T) {
 	args := &CreateEipArgs{
 		BandwidthInMbps: 998,
 		Billing:         bill,
-		Name:            "k8sblbtest",
+		Name:            "k8stestcgy",
 	}
 	ip, err := eipClient.CreateEip(args)
 	if err != nil {
@@ -57,9 +58,9 @@ func TestBindEip(t *testing.T) {
 	// eipClient.Endpoint = ts.URL
 	eipClient.SetDebug(true)
 	args := &BindEipArgs{
-		Ip:           "180.76.247.163",
-		InstanceType: "BLB",
-		InstanceId:   "lb-ccb6c6bf",
+		Ip:           "180.76.247.62",
+		InstanceType: "BCC",
+		InstanceId:   "i-VAEyKKTh",
 	}
 	err := eipClient.BindEip(args)
 	if err != nil {
@@ -68,13 +69,13 @@ func TestBindEip(t *testing.T) {
 }
 
 var expectUnbindEip = &EipArgs{
-	Ip: "180.76.234.127",
+	Ip: "180.76.154.83",
 }
 
 func TestUnbindEip(t *testing.T) {
-	ts := httptest.NewServer(EipHandler())
-	defer ts.Close()
-	eipClient.Endpoint = ts.URL
+	// ts := httptest.NewServer(EipHandler())
+	// defer ts.Close()
+	// eipClient.Endpoint = ts.URL
 	err := eipClient.UnbindEip(expectUnbindEip)
 	if err != nil {
 		t.Error(err)
@@ -93,13 +94,13 @@ func TestDeleteEip(t *testing.T) {
 func TestGetEips(t *testing.T) {
 	ts := httptest.NewServer(EipHandler())
 	defer ts.Close()
-	eipClient.Endpoint = ts.URL
+	// eipClient.Endpoint = ts.URL
 	eips, err := eipClient.GetEips(nil)
 	if err != nil {
 		t.Error(err)
 	}
 	for _, eip := range eips {
-		fmt.Println(eip.Eip)
+		fmt.Printf("%+v \n", eip)
 	}
 }
 func TestPurchaseReservedEips(t *testing.T) {

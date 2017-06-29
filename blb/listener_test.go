@@ -10,8 +10,8 @@ import (
 func TestCreateTCPListener(t *testing.T) {
 	blbClient.SetDebug(true)
 	args := &CreateTCPListenerArgs{
-		LoadBalancerId: "lb-f5d263e5",
-		ListenerPort:   8080,
+		LoadBalancerId: "lb-e5b33752",
+		ListenerPort:   8088,
 		BackendPort:    8080,
 		Scheduler:      "LeastConnection",
 	}
@@ -53,8 +53,8 @@ func TestCreateHTTPListener(t *testing.T) {
 func TestDescribeTCPListener(t *testing.T) {
 	blbClient.SetDebug(true)
 	args := &DescribeTCPListenerArgs{
-		LoadBalancerId: "lb-f5d263e5",
-		ListenerPort:   80,
+		LoadBalancerId: "lb-e5b33752",
+		ListenerPort:   8088,
 	}
 	list, err := blbClient.DescribeTCPListener(args)
 
@@ -71,7 +71,7 @@ func TestDescribeTCPListener(t *testing.T) {
 func TestDescribeUDPListener(t *testing.T) {
 	blbClient.SetDebug(true)
 	args := &DescribeUDPListenerArgs{
-		LoadBalancerId: "lb-f5d263e5",
+		LoadBalancerId: "lb-07ab7a1d",
 		// ListenerPort:   80,
 	}
 	list, err := blbClient.DescribeUDPListener(args)
@@ -88,9 +88,9 @@ func TestDescribeUDPListener(t *testing.T) {
 func TestUpdateTCPListener(t *testing.T) {
 	blbClient.SetDebug(true)
 	args := &UpdateTCPListenerArgs{
-		LoadBalancerId: "lb-f5d263e5",
-		ListenerPort:   8080,
-		BackendPort:    9991,
+		LoadBalancerId: "lb-e5b33752",
+		ListenerPort:   8088,
+		BackendPort:    999,
 	}
 	err := blbClient.UpdateTCPListener(args)
 	if err != nil {
@@ -116,8 +116,8 @@ func TestUpdateUDPListener(t *testing.T) {
 func TestDeleteListeners(t *testing.T) {
 	blbClient.SetDebug(true)
 	args := &DeleteListenersArgs{
-		LoadBalancerId: "lb-f5d263e5",
-		PortList:       []int{8899},
+		LoadBalancerId: "lb-e5b33752",
+		PortList:       []int{8088},
 	}
 	err := blbClient.DeleteListeners(args)
 	if err != nil {
