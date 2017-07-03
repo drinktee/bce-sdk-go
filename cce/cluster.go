@@ -17,7 +17,7 @@ func (c *Client) ListInstances(clusterID string) ([]bcc.Instance, error) {
 	params := map[string]string{
 		"clusterid": clusterID,
 	}
-	req, err := bce.NewRequest("GET", c.GetURL("/api/service/cce/instance", params), nil)
+	req, err := bce.NewRequest("GET", c.GetURL("/v1/instance", params), nil)
 
 	if err != nil {
 		return nil, err
