@@ -10,10 +10,10 @@ func TestListRouteTable(t *testing.T) {
 	// defer ts.Close()
 	// eipClient.Endpoint = ts.URL
 	// eips, err := eipClient.GetEips(nil)
-	// bccClient.Endpoint = "bcc.bce-api.baidu.com"
+	bccClient.Endpoint = "bcc.bce-api.baidu.com"
 	bccClient.SetDebug(true)
 	args := ListRouteArgs{
-		VpcID: "45d38bda-00b1-4146-a40a-27885d473353",
+		VpcID: "vpc-4yprmi7pjscp",
 	}
 	rs, err := bccClient.ListRouteTable(&args)
 	if err != nil {

@@ -4,17 +4,21 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/http/httptest"
 	"os"
-	"path"
 
 	"io/ioutil"
 
 	"time"
 
 	"github.com/drinktee/bce-sdk-go/bce"
+	"github.com/gorilla/mux"
 )
 
-var eipClient *Client
+var (
+	testHTTPServer *httptest.Server
+	eipClient      *Client
+)
 
 func init() {
 	var credentials, _ = bce.NewCredentialsFromFile("../aksk-test.json")
@@ -28,25 +32,38 @@ func init() {
 	}
 	var bccConfig = NewConfig(bceConfig)
 	eipClient = NewEIPClient(bccConfig)
-	eipClient.SetDebug(true)
+	// eipClient.SetDebug(true)
+	r := mux.NewRouter()
+	r.HandleFunc("/v1/eip", handleGetEips).Methods("GET")
+	r.HandleFunc("/v1/eip/{ip}", handleDeleteEip).Methods("DELETE")
+	r.HandleFunc("/v1/eip/{ip}", handleUnbindEip).Methods("PUT")
+	r.HandleFunc("/v1/eip", handleCreateEip).Methods("POST")
+	testHTTPServer = httptest.NewServer(r)
+	eipClient.Endpoint = testHTTPServer.URL
 }
 
-func EipHandler() http.Handler {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/v1/eip", func(w http.ResponseWriter, r *http.Request) {
-		handleCreateGetEip(w, r)
-	})
-	mux.HandleFunc("/v1/eip/", func(w http.ResponseWriter, r *http.Request) {
-		handleUpdateEip(w, r)
-	})
-	return mux
+func handleCreateEip(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	args := &CreateEipArgs{}
+	json.Unmarshal(body, args)
+	if args.Billing.BillingMethod != "ByTraffic" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	response := `{
+    "eip":"180.181.3.133"
+}`
+	fmt.Fprint(w, response)
 }
 
-func handleCreateGetEip(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodGet:
-		w.Header().Set("Content-Type", "application/json")
-		response := `{
+func handleGetEips(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	response := `{
     "eipList": [
         {
             "name":"eip-xrllt5M-1",
@@ -82,86 +99,51 @@ func handleCreateGetEip(w http.ResponseWriter, r *http.Request) {
     "nextMarker": "eip-DCB50387",
     "maxKeys": 2
 }`
-		fmt.Fprint(w, response)
-	case http.MethodPost:
-		w.Header().Set("Content-Type", "application/json")
-		body, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-		args := &CreateEipArgs{}
-		json.Unmarshal(body, args)
-		if args.Billing.BillingMethod != "ByTraffic" {
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-		response := `{
-    "eip":"180.181.3.133"
-}`
-		fmt.Fprint(w, response)
-	}
+	fmt.Fprint(w, response)
 }
 
-func handleUpdateEip(w http.ResponseWriter, r *http.Request) {
-	_, eip := path.Split(r.URL.Path)
-	if r.Method == http.MethodPut {
-		query := r.URL.Query()
-		_, ok := query["resize"]
-		if ok {
-			if eip != expectResizeEip.Ip {
-				w.WriteHeader(400)
-			}
-			body, err := ioutil.ReadAll(r.Body)
-			if err != nil {
-				w.WriteHeader(http.StatusBadRequest)
-				return
-			}
-			args := &ResizeEipArgs{}
-			json.Unmarshal(body, args)
-			if args.BandwidthInMbps != expectResizeEip.BandwidthInMbps {
-				w.WriteHeader(http.StatusBadRequest)
-				return
-			}
-			w.WriteHeader(http.StatusOK)
-			return
-		}
-		_, ok = query["bind"]
-		if ok {
-			if eip != expectBindEip.Ip {
-				w.WriteHeader(400)
-			}
-			body, err := ioutil.ReadAll(r.Body)
-			if err != nil {
-				w.WriteHeader(http.StatusBadRequest)
-				return
-			}
-			args := &BindEipArgs{}
-			json.Unmarshal(body, args)
-			if args.InstanceType != expectBindEip.InstanceType {
-				w.WriteHeader(http.StatusBadRequest)
-				return
-			}
-			w.WriteHeader(http.StatusOK)
-			return
-		}
-
-		_, ok = query["unbind"]
-		if ok {
-			if eip != expectBindEip.Ip {
-				w.WriteHeader(400)
-			}
-			w.WriteHeader(http.StatusOK)
-			return
-		}
-		w.WriteHeader(http.StatusBadRequest)
+func handleDeleteEip(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	vars := mux.Vars(r)
+	ip := vars["ip"]
+	if ip == "180.76.154.83" {
+		w.WriteHeader(200)
+	} else {
+		w.WriteHeader(400)
 	}
-	if r.Method == http.MethodDelete {
-		if eip != expectUnbindEip.Ip {
-			w.WriteHeader(400)
+
+}
+
+func handleUnbindEip(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	query := r.URL.Query()
+	act := query["bind"]
+	if len(act) > 0 {
+		vars := mux.Vars(r)
+		ip := vars["ip"]
+		if ip == "180.76.247.62" {
+			w.WriteHeader(200)
 			return
 		}
-		w.WriteHeader(http.StatusOK)
+	}
+	act = query["unbind"]
+	if len(act) > 0 {
+		vars := mux.Vars(r)
+		ip := vars["ip"]
+		if ip == expectUnbindEip.Ip {
+			w.WriteHeader(200)
+			return
+		}
+	}
+
+	act = query["resize"]
+	if len(act) > 0 {
+		vars := mux.Vars(r)
+		ip := vars["ip"]
+		if ip == expectResizeEip.Ip {
+			w.WriteHeader(200)
+			return
+		}
 	}
 	w.WriteHeader(400)
 }

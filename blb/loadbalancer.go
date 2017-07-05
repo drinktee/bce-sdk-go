@@ -34,10 +34,11 @@ type DescribeLoadBalancersResponse struct {
 	BLBList     []LoadBalancer `json:"blbList"`
 }
 
+// CreateLoadBalancerArgs create blb args
 type CreateLoadBalancerArgs struct {
-	Desc string `json:"desc"`
-	Name string `json:"name"`
-	// ClientToken string
+	Desc  string `json:"desc"`
+	Name  string `json:"name"`
+	VpcID string `json:"vpcId,omitempty"`
 }
 
 type CreateLoadBalancerResponse struct {
