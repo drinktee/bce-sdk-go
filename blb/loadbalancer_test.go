@@ -1,34 +1,30 @@
 package blb
 
 import (
-	"testing"
-
 	"fmt"
+	"testing"
 
 	"github.com/drinktee/bce-sdk-go/util"
 )
 
+var expectCreateBLB = &CreateLoadBalancerArgs{
+	Name: "blb-for-test",
+}
+
 func TestCreateLoadBalance(t *testing.T) {
-	blbClient.SetDebug(true)
-	args := &CreateLoadBalancerArgs{
-		Name: "golang-sun123",
-	}
-	blb, err := blbClient.CreateLoadBalancer(args)
-
+	blb, err := blbClient.CreateLoadBalancer(expectCreateBLB)
 	if err != nil {
-		fmt.Println(err)
 		t.Error(util.FormatTest("TestCreateLoadBalance", err.Error(), "nil"))
-
 	} else {
-		fmt.Println(blb.Address)
+		if blb.Name != expectCreateBLB.Name {
+			t.Error("blb name error")
+		}
 	}
 }
 
 func TestDescribeLoadBalancers(t *testing.T) {
-	// blbClient.Endpoint = "bcc.bce-api.baidu.com"
-	blbClient.SetDebug(true)
 	args := &DescribeLoadBalancersArgs{
-		LoadBalancerName: "bakendtest",
+		LoadBalancerName: "test",
 	}
 	list, err := blbClient.DescribeLoadBalancers(args)
 
@@ -36,14 +32,12 @@ func TestDescribeLoadBalancers(t *testing.T) {
 		fmt.Println(err)
 		t.Error(util.FormatTest("TestDescribeLoadBalancers", err.Error(), "nil"))
 	}
-	fmt.Println(len(list))
-	for _, blb := range list {
-		fmt.Println(blb.PublicIp)
+	if len(list) != 2 {
+		t.Error("blb length error")
 	}
 }
 
 func TestUpdateLoadBalancer(t *testing.T) {
-	blbClient.SetDebug(true)
 	args := &UpdateLoadBalancerArgs{
 		LoadBalancerId: "lb-e5b33752",
 		Name:           "golang-123",
@@ -55,7 +49,6 @@ func TestUpdateLoadBalancer(t *testing.T) {
 }
 
 func TestDeleteLoadBalancer(t *testing.T) {
-	blbClient.SetDebug(true)
 	args := &DeleteLoadBalancerArgs{
 		LoadBalancerId: "lb-426fad2b",
 	}

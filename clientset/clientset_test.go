@@ -3,8 +3,6 @@ package clientset
 import (
 	"testing"
 
-	"fmt"
-
 	"github.com/drinktee/bce-sdk-go/bce"
 )
 
@@ -19,13 +17,14 @@ func TestNewFromConfig(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		} else {
-			is, err := cs.Bcc().ListInstances(nil)
-			if err != nil {
-				t.Error(err)
-			} else {
-				for _, i := range is {
-					fmt.Println(i.InstanceName)
-				}
+			if cs.Bcc().AccessKeyID != credentials.AccessKeyID {
+				t.Error("ak error")
+			}
+			if cs.Blb().AccessKeyID != credentials.AccessKeyID {
+				t.Error("ak error")
+			}
+			if cs.Eip().AccessKeyID != credentials.AccessKeyID {
+				t.Error("ak error")
 			}
 		}
 
