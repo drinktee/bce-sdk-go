@@ -8,7 +8,6 @@ import (
 )
 
 func TestAddBackendServers(t *testing.T) {
-	blbClient.SetDebug(true)
 	args := &AddBackendServersArgs{
 		LoadBalancerId: "lb-e5b33752",
 		BackendServerList: []BackendServer{
@@ -29,24 +28,20 @@ func TestAddBackendServers(t *testing.T) {
 }
 
 func TestDescribeBackendServers(t *testing.T) {
-	blbClient.SetDebug(true)
 	args := &DescribeBackendServersArgs{
 		LoadBalancerId: "lb-e5b33752",
 	}
 	list, err := blbClient.DescribeBackendServers(args)
-
 	if err != nil {
 		fmt.Println(err)
 		t.Error(util.FormatTest("DescribeBackendServers", err.Error(), "nil"))
 	}
-	fmt.Println(len(list))
 	for _, blb := range list {
 		fmt.Println(blb)
 	}
 }
 
 func TestUpdateBackendServers(t *testing.T) {
-	blbClient.SetDebug(true)
 	args := &UpdateBackendServersArgs{
 		LoadBalancerId: "lb-e5b33752",
 		BackendServerList: []BackendServer{BackendServer{
@@ -61,7 +56,6 @@ func TestUpdateBackendServers(t *testing.T) {
 }
 
 func TestRemoveBackendServers(t *testing.T) {
-	blbClient.SetDebug(true)
 	args := &RemoveBackendServersArgs{
 		LoadBalancerId:    "lb-e5b33752",
 		BackendServerList: []string{"i-vfBlsqNG", "i-vfBlsqNG"},

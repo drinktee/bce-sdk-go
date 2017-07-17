@@ -8,7 +8,6 @@ import (
 )
 
 func TestCreateTCPListener(t *testing.T) {
-	blbClient.SetDebug(true)
 	args := &CreateTCPListenerArgs{
 		LoadBalancerId: "lb-e5b33752",
 		ListenerPort:   8088,
@@ -22,7 +21,6 @@ func TestCreateTCPListener(t *testing.T) {
 }
 
 func TestCreateUDPListener(t *testing.T) {
-	blbClient.SetDebug(true)
 	args := &CreateUDPListenerArgs{
 		LoadBalancerId:    "lb-f5d263e5",
 		ListenerPort:      8888,
@@ -37,7 +35,6 @@ func TestCreateUDPListener(t *testing.T) {
 }
 
 func TestCreateHTTPListener(t *testing.T) {
-	blbClient.SetDebug(true)
 	args := &CreateHTTPListenerArgs{
 		LoadBalancerId: "lb-f5d263e5",
 		ListenerPort:   8899,
@@ -51,7 +48,6 @@ func TestCreateHTTPListener(t *testing.T) {
 }
 
 func TestDescribeTCPListener(t *testing.T) {
-	blbClient.SetDebug(true)
 	args := &DescribeTCPListenerArgs{
 		LoadBalancerId: "lb-e5b33752",
 		ListenerPort:   8088,
@@ -59,17 +55,14 @@ func TestDescribeTCPListener(t *testing.T) {
 	list, err := blbClient.DescribeTCPListener(args)
 
 	if err != nil {
-		fmt.Println(err)
 		t.Error(util.FormatTest("ListInstances", err.Error(), "nil"))
 	}
-	fmt.Println(len(list))
 	for _, blb := range list {
 		fmt.Println(blb.ListenerPort)
 	}
 }
 
 func TestDescribeUDPListener(t *testing.T) {
-	blbClient.SetDebug(true)
 	args := &DescribeUDPListenerArgs{
 		LoadBalancerId: "lb-07ab7a1d",
 		// ListenerPort:   80,
@@ -77,16 +70,13 @@ func TestDescribeUDPListener(t *testing.T) {
 	list, err := blbClient.DescribeUDPListener(args)
 
 	if err != nil {
-		fmt.Println(err)
 		t.Error(util.FormatTest("DescribeUDPListener", err.Error(), "nil"))
 	}
-	fmt.Println(len(list))
 	for _, blb := range list {
 		fmt.Println(blb.ListenerPort)
 	}
 }
 func TestUpdateTCPListener(t *testing.T) {
-	blbClient.SetDebug(true)
 	args := &UpdateTCPListenerArgs{
 		LoadBalancerId: "lb-e5b33752",
 		ListenerPort:   8088,
@@ -99,7 +89,6 @@ func TestUpdateTCPListener(t *testing.T) {
 }
 
 func TestUpdateUDPListener(t *testing.T) {
-	blbClient.SetDebug(true)
 	args := &UpdateUDPListenerArgs{
 		LoadBalancerId:    "lb-f5d263e5",
 		ListenerPort:      8888,
@@ -114,7 +103,6 @@ func TestUpdateUDPListener(t *testing.T) {
 }
 
 func TestDeleteListeners(t *testing.T) {
-	blbClient.SetDebug(true)
 	args := &DeleteListenersArgs{
 		LoadBalancerId: "lb-e5b33752",
 		PortList:       []int{8088},

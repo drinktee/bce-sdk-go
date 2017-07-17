@@ -20,7 +20,7 @@ var cceClient = NewClient(cceConfig)
 
 func InstancesHandler() http.Handler {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/api/service/cce/instance", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/v1/instance", func(w http.ResponseWriter, r *http.Request) {
 		handleInstanceList(w, r)
 	})
 	mux.HandleFunc("/v2/instance/", func(w http.ResponseWriter, r *http.Request) {
