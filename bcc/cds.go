@@ -58,11 +58,28 @@ const (
 	STORAGE_TYPE_SSD  StorageType = "ssd"
 )
 
+// VolumeAttachment define attach info
 type VolumeAttachment struct {
 	VolumeId   string `json:"volumeId"`
 	InstanceId string `json:"instanceId"`
 	// mount path
 	Device string `json:"device"`
+}
+
+// CdsPreMountInfo define premount
+type CdsPreMountInfo struct {
+	MountPath string           `json:"mountPath"`
+	CdsConfig []DiskSizeConfig `json:"cdsConfig"`
+}
+
+// DiskSizeConfig define distsize config
+type DiskSizeConfig struct {
+	Size         string `json:"size"`
+	SnapshotID   string `json:"snapshotID"`
+	SnapshotName string `json:"snapshotName"`
+	VolumeType   string `json:"volumeType"`
+	StorageType  string `json:"storageType"`
+	LogicalZone  string `json:"logicalZone"`
 }
 
 // DeleteVolume Delete a volume
