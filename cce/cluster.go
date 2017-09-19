@@ -165,6 +165,24 @@ type EipOrderConfig struct {
 	ServiceType       string `json:"serviceType"`       // "EIP"
 }
 
+// ScaleDownClusterArgs define  args
+type ScaleDownClusterArgs struct {
+	ClusterID string     `json:"clusterUuid"`
+	AuthCode  string     `json:"authCode"`
+	NodeInfos []NodeInfo `json:"nodeInfo"`
+}
+
+// NodeInfo define instanceid
+type NodeInfo struct {
+	InstanceID string `json:"instanceId"`
+}
+
+// ScaleDownClusterResponse define  args
+type ScaleDownClusterResponse struct {
+	ClusterID string   `json:"clusterUuid"`
+	OrderID   []string `json:"orderId"`
+}
+
 // ScaleUpCluster scaleup a  cluster
 func (c *Client) ScaleUpCluster(args *ScaleUpClusterArgs) (*ScaleUpClusterResponse, error) {
 	var params map[string]string
@@ -197,4 +215,25 @@ func (c *Client) ScaleUpCluster(args *ScaleUpClusterArgs) (*ScaleUpClusterRespon
 		return nil, err
 	}
 	return scResp, nil
+}
+
+// ScaleDownCluster scale down a  cluster
+func (c *Client) ScaleDownCluster(args *ScaleDownClusterArgs) error {
+	var params map[string]string
+	if args != nil {
+		params = map[string]string{
+			"clientToken": c.GenerateClientToken(),
+			"scalingDown": "",
+		}
+	}
+	postContent, err := json.Marshal(args)
+	if err != nil {
+		return err
+	}
+	req, err := bce.NewRequest("POST", c.GetURL("v1/cluster", params), bytes.NewBuffer(postContent))
+	if err != nil {
+		return err
+	}
+	_, err = c.SendRequest(req, nil)
+	return err
 }

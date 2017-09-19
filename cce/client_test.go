@@ -1,11 +1,12 @@
 package cce
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/drinktee/bce-sdk-go/bce"
+	"io/ioutil"
 	"net/http"
 	"path"
-
-	"github.com/drinktee/bce-sdk-go/bce"
 )
 
 var credentials, _ = bce.NewCredentialsFromFile("../aksk-test.json")
@@ -18,7 +19,7 @@ var bceConfig = &bce.Config{
 var cceConfig = NewConfig(bceConfig)
 var cceClient = NewClient(cceConfig)
 
-func InstancesHandler() http.Handler {
+func ClusterHandler() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/v1/instance", func(w http.ResponseWriter, r *http.Request) {
 		handleInstanceList(w, r)
@@ -26,6 +27,10 @@ func InstancesHandler() http.Handler {
 	mux.HandleFunc("/v2/instance/", func(w http.ResponseWriter, r *http.Request) {
 		handleDescribeInstance(w, r)
 	})
+	mux.HandleFunc("/v1/cluster", func(w http.ResponseWriter, r *http.Request) {
+		handleScaleUpCluster(w, r)
+	})
+
 	return mux
 }
 
@@ -87,4 +92,37 @@ func handleDescribeInstance(w http.ResponseWriter, r *http.Request) {
 }`
 		fmt.Fprint(w, response)
 	}
+}
+
+func handleScaleUpCluster(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	query := r.URL.Query()
+	act := query["scalingUp"]
+	if len(act) > 0 {
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		args := &ScaleUpClusterArgs{}
+		json.Unmarshal(body, args)
+		if args.ClusterID != "c-NqYwWEhu" {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		response := `{
+            "clusterUuid": "c-NqYwWEhu",
+            "orderId": [
+                "8d58c20f46294a7ea4922928db1fddea" 
+                ]
+        }`
+		fmt.Fprint(w, response)
+		return
+	}
+	act = query["scalingDown"]
+	if len(act) > 0 {
+		w.WriteHeader(200)
+		return
+	}
+	w.WriteHeader(400)
 }

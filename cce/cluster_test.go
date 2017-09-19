@@ -9,7 +9,7 @@ import (
 )
 
 func TestListInstances(t *testing.T) {
-	ts := httptest.NewServer(InstancesHandler())
+	ts := httptest.NewServer(ClusterHandler())
 	defer ts.Close()
 	cceClient.Endpoint = ts.URL
 	cceClient.SetDebug(true)
@@ -20,5 +20,32 @@ func TestListInstances(t *testing.T) {
 	}
 	for _, ins := range list {
 		fmt.Println(ins.VpcId)
+	}
+}
+
+func TestScaleUp(t *testing.T) {
+	ts := httptest.NewServer(ClusterHandler())
+	defer ts.Close()
+	cceClient.Endpoint = ts.URL
+	cceClient.SetDebug(true)
+	args := &ScaleUpClusterArgs{
+		ClusterID: "c-NqYwWEhu",
+		OrderContent: OrderContent{
+			Items: []OrderItem{
+				OrderItem{
+					Config: BccOrderConfig{
+						CPU: 100,
+					},
+				},
+			},
+		},
+	}
+	res, err := cceClient.ScaleUpCluster(args)
+
+	if err != nil {
+		t.Fatalf("ScaleUpCluster fail: %v", err)
+	}
+	if res.ClusterID != "c-NqYwWEhu" {
+		t.Fatalf("ScaleUpCluster ClusterID fail")
 	}
 }
