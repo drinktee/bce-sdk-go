@@ -49,3 +49,21 @@ func TestScaleUp(t *testing.T) {
 		t.Fatalf("ScaleUpCluster ClusterID fail")
 	}
 }
+
+func TestScaleDown(t *testing.T) {
+	ts := httptest.NewServer(ClusterHandler())
+	defer ts.Close()
+	cceClient.Endpoint = ts.URL
+	cceClient.SetDebug(true)
+	args := &ScaleDownClusterArgs{
+		ClusterID: "c-NqYwWEhu",
+		AuthCode:  "123456",
+	}
+
+	err := cceClient.ScaleDownCluster(args)
+
+	if err != nil {
+		t.Fatalf("ScaleDownCluster fail: %v", err)
+	}
+
+}

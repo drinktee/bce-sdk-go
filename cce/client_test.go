@@ -121,6 +121,18 @@ func handleScaleUpCluster(w http.ResponseWriter, r *http.Request) {
 	}
 	act = query["scalingDown"]
 	if len(act) > 0 {
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		args := &ScaleDownClusterArgs{}
+		json.Unmarshal(body, args)
+		if args.ClusterID != "c-NqYwWEhu" || args.AuthCode != "123456" {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
 		w.WriteHeader(200)
 		return
 	}
