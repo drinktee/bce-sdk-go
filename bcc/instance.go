@@ -31,6 +31,7 @@ type Instance struct {
 	PublicIP              string `json:"publicIp"`
 	InternalIP            string `json:"internalIp"`
 	CpuCount              int    `json:"cpuCount"`
+	GpuCount              int    `json:"gpuCount"`
 	MemoryCapacityInGB    int    `json:"memoryCapacityInGB"`
 	localDiskSizeInGB     int    `json:"localDiskSizeInGB"`
 	ImageId               string `json:"imageId"`
