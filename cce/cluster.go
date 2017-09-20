@@ -8,6 +8,15 @@ import (
 	"github.com/drinktee/bce-sdk-go/bce"
 )
 
+const (
+	InstanceStatusRunning      string = "RUNNING"
+	InstanceStatusCreating     string = "CREATING"
+	InstanceStatusDeleting     string = "DELETING"
+	InstanceStatusDeleted      string = "DELETED"
+	InstanceStatusCreateFailed string = "CREATE_FAILED"
+	InstanceStatusError        string = "ERROR"
+)
+
 // ListInstances gets all Instances of a cluster.
 func (c *Client) ListInstances(clusterID string) ([]bcc.Instance, error) {
 	if clusterID == "" {
