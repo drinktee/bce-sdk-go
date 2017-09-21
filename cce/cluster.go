@@ -17,8 +17,36 @@ const (
 	InstanceStatusError        string = "ERROR"
 )
 
+// CceInstance define instance of cce
+type CceInstance struct {
+	InstanceId            string `json:"id"`
+	InstanceName          string `json:"name"`
+	Description           string `json:"desc"`
+	Status                string `json:"status"`
+	PaymentTiming         string `json:"paymentTiming"`
+	CreationTime          string `json:"createTime"`
+	ExpireTime            string `json:"expireTime"`
+	PublicIP              string `json:"publicIp"`
+	InternalIP            string `json:"internalIp"`
+	CpuCount              int    `json:"cpu"`
+	GpuCount              int    `json:"gpu"`
+	MemoryCapacityInGB    int    `json:"memory"`
+	localDiskSizeInGB     int    `json:"localDiskSizeInGB"`
+	ImageId               string `json:"imageId"`
+	NetworkCapacityInMbps int    `json:"networkCapacityInMbps"`
+	PlacementPolicy       string `json:"placementPolicy"`
+	ZoneName              string `json:"zoneName"`
+	SubnetId              string `json:"subnetId"`
+	VpcId                 string `json:"vpcId"`
+}
+
+// ListInstancesResponse define response of cce list
+type ListInstancesResponse struct {
+	Instances []CceInstance `json:"instances"`
+}
+
 // ListInstances gets all Instances of a cluster.
-func (c *Client) ListInstances(clusterID string) ([]bcc.Instance, error) {
+func (c *Client) ListInstances(clusterID string) ([]CceInstance, error) {
 	if clusterID == "" {
 		return nil, fmt.Errorf("clusterID should not be nil")
 	}
@@ -43,7 +71,7 @@ func (c *Client) ListInstances(clusterID string) ([]bcc.Instance, error) {
 		return nil, err
 	}
 
-	var insList *bcc.ListInstancesResponse
+	var insList ListInstancesResponse
 	err = json.Unmarshal(bodyContent, &insList)
 
 	if err != nil {
