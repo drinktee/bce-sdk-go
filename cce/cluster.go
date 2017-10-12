@@ -132,7 +132,7 @@ type BccOrderConfig struct {
 	// 暂时为空
 	EbsSize []int `json:"ebsSize"`
 	// 是否需要购买EIP
-	IfBuyEip bool `json:"ifBuyEip"`
+	IfBuyEip int `json:"ifBuyEip,omitempty"`
 	// eip名称
 	EipName        string `json:"eipName"`
 	SubProductType string `json:"subProductType"`
