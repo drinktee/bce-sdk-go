@@ -83,9 +83,9 @@ func (c *Client) ListInstances(clusterID string) ([]CceInstance, error) {
 
 // ScaleUpClusterArgs define  args
 type ScaleUpClusterArgs struct {
-	ClusterID       string              `json:"clusterUuid"`
-	CdsPreMountInfo bcc.CdsPreMountInfo `json:"cdsPreMountInfo"`
-	OrderContent    OrderContent        `json:"orderContent"`
+	ClusterID       string              `json:"clusterUuid,omitempty"`
+	CdsPreMountInfo bcc.CdsPreMountInfo `json:"cdsPreMountInfo,omitempty"`
+	OrderContent    OrderContent        `json:"orderContent,omitempty"`
 }
 
 // ScaleUpClusterResponse define  args
@@ -96,110 +96,110 @@ type ScaleUpClusterResponse struct {
 
 // OrderContent define  bcc order content
 type OrderContent struct {
-	PaymentMethod []string    `json:"paymentMethod"`
-	Items         []OrderItem `json:"items"`
+	PaymentMethod []string    `json:"paymentMethod,omitempty"`
+	Items         []OrderItem `json:"items,omitempty"`
 }
 
 // OrderItem define  bcc order content item
 type OrderItem struct {
-	Config        interface{} `json:"config"`
-	PaymentMethod []string    `json:"paymentMethod"`
+	Config        interface{} `json:"config,omitempty"`
+	PaymentMethod []string    `json:"paymentMethod,omitempty"`
 }
 
 // BccOrderConfig define BCC order config
 type BccOrderConfig struct {
 	// 付费类型，一期只支持postpay
-	ProductType string `json:"productType"`
-	Region      string `json:"region"`
-	LogicalZone string `json:"logicalZone"`
+	ProductType string `json:"productType,omitempty"`
+	Region      string `json:"region,omitempty"`
+	LogicalZone string `json:"logicalZone,omitempty"`
 	// 普通BCC
-	InstanceType string `json:"instanceType"`
+	InstanceType string `json:"instanceType,omitempty"`
 	// 这些参数默认就行 容器产品用不到
-	FpgaCard string `json:"fpgaCard"`
-	GpuCard  int    `json:"gpuCard"`
-	GpuCount int    `json:"gpuCount"`
+	FpgaCard string `json:"fpgaCard,omitempty"`
+	GpuCard  int    `json:"gpuCard,omitempty"`
+	GpuCount int    `json:"gpuCount,omitempty"`
 
-	CPU    int `json:"cpu"`
-	Memory int `json:"memory"`
+	CPU    int `json:"cpu,omitempty"`
+	Memory int `json:"memory,omitempty"`
 	// 就一个镜像 ubuntu1604
-	ImageType string `json:"imageType"`
+	ImageType string `json:"imageType,omitempty"`
 	// 系统类型
-	OsType string `json:"osType"`
+	OsType string `json:"osType,omitempty"`
 	// 系统版本
-	OsVersion string `json:"osVersion"`
+	OsVersion string `json:"osVersion,omitempty"`
 	// 系统盘大小
-	DiskSize int `json:"diskSize"`
+	DiskSize int `json:"diskSize,omitempty"`
 	// 暂时为空
-	EbsSize []int `json:"ebsSize"`
+	EbsSize []int `json:"ebsSize,omitempty"`
 	// 是否需要购买EIP
 	IfBuyEip int `json:"ifBuyEip,omitempty"`
 	// eip名称
-	EipName        string `json:"eipName"`
-	SubProductType string `json:"subProductType"`
+	EipName        string `json:"eipName,omitempty"`
+	SubProductType string `json:"subProductType,omitempty"`
 	// eip带宽
-	BandwidthInMbps int `json:"bandwidthInMbps"`
+	BandwidthInMbps int `json:"bandwidthInMbps,omitempty"`
 
-	SubnetUuiD      string `json:"subnetUuid"`      // 子网uuid
-	SecurityGroupID string `json:"securityGroupId"` // 安全组id
+	SubnetUuiD      string `json:"subnetUuid,omitempty"`      // 子网uuid
+	SecurityGroupID string `json:"securityGroupId,omitempty"` // 安全组id
 
-	AdminPass        string `json:"adminPass"`
-	AdminPassConfirm string `json:"adminPassConfirm"`
-	PurchaseLength   int    `json:"purchaseLength"`
+	AdminPass        string `json:"adminPass,omitempty"`
+	AdminPassConfirm string `json:"adminPassConfirm,omitempty"`
+	PurchaseLength   int    `json:"purchaseLength,omitempty"`
 	// 购买的虚机个数
-	PurchaseNum int `json:"purchaseNum"`
+	PurchaseNum int `json:"purchaseNum,omitempty"`
 
-	AutoRenewTimeUnit   string                `json:"autoRenewTimeUnit"`
-	AutoRenewTime       int64                 `json:"autoRenewTime"`
-	CreateEphemeralList []CreateEphemeralList `json:"createEphemeralList"`
+	AutoRenewTimeUnit   string                `json:"autoRenewTimeUnit,omitempty"`
+	AutoRenewTime       int64                 `json:"autoRenewTime,omitempty"`
+	CreateEphemeralList []CreateEphemeralList `json:"createEphemeralList,omitempty"`
 	// 是否自动续费 默认即可 后付费不存在这个问题
-	AutoRenew bool `json:"autoRenew"`
+	AutoRenew bool `json:"autoRenew,omitempty"`
 	// 镜像id 用默认即可 固定是ubuntu1604
-	ImageID           string `json:"imageId"`
-	OsName            string `json:"osName"`
-	SecurityGroupName string `json:"securityGroupName"`
+	ImageID           string `json:"imageId,omitempty"`
+	OsName            string `json:"osName,omitempty"`
+	SecurityGroupName string `json:"securityGroupName,omitempty"`
 	// BCC
-	ServiceType string `json:"serviceType"`
+	ServiceType string `json:"serviceType,omitempty"`
 }
 
 // CreateEphemeralList define storage
 type CreateEphemeralList struct {
 	// 磁盘存储类型 从页面创建虚机时 看到请求 默认是ssd
-	StorageType string `json:"storageType"`
+	StorageType string `json:"storageType,omitempty"`
 	// 磁盘大小
-	SizeInGB int `json:"sizeInGB"`
+	SizeInGB int `json:"sizeInGB,omitempty"`
 }
 
 // CdsOrderConfig define CDS order config
 type CdsOrderConfig struct {
 	// 付费类型，一期只支持postpay
-	productType string `json:"productType"`
+	productType string `json:"productType,omitempty"`
 	// "zoneA"
-	logicalZone    string `json:"logicalZone"`
-	region         string `json:"sizeInGB"` // "bj"
-	purchaseNum    int    `json:"sizeInGB"` // 1
-	purchaseLength int    `json:"sizeInGB"` // 1
-	autoRenewTime  int    `json:"sizeInGB"` // 0
+	logicalZone    string `json:"logicalZone,omitempty"`
+	region         string `json:"region,omitempty"`         // "bj"
+	purchaseNum    int    `json:"purchaseNum,omitempty"`    // 1
+	purchaseLength int    `json:"purchaseLength,omitempty"` // 1
+	autoRenewTime  int    `json:"autoRenewTime,omitempty"`  // 0
 	// "month"
-	autoRenewTimeUnit string               `json:"sizeInGB"`
-	cdsDiskSize       []bcc.DiskSizeConfig `json:"sizeInGB"`
+	autoRenewTimeUnit string               `json:"autoRenewTimeUnit,omitempty"`
+	cdsDiskSize       []bcc.DiskSizeConfig `json:"cdsDiskSize,omitempty"`
 	// "CDS"
-	serviceType string `json:"sizeInGB"`
+	serviceType string `json:"serviceType,omitempty"`
 }
 
 // EipOrderConfig define CDS order config
 type EipOrderConfig struct {
 	// 付费类型，一期只支持postpay
-	ProductType     string `json:"productType"`
-	BandwidthInMbps int    `json:"bandwidthInMbps"` // 1000
-	Region          string `json:"region"`          // "bj"
-	SubProductType  string `json:"subProductType"`  // "netraffic",
+	ProductType     string `json:"productType,omitempty"`
+	BandwidthInMbps int    `json:"bandwidthInMbps,omitempty"` // 1000
+	Region          string `json:"region,omitempty"`          // "bj"
+	SubProductType  string `json:"subProductType,omitempty"`  // "netraffic",
 	// EIP购买数量应该是购买BCC数量的总和
-	PurchaseNum       int    `json:"purchaseNum"`
-	PurchaseLength    int    `json:"purchaseLength"`    // 1
-	AutoRenewTime     int    `json:"autoRenewTime"`     // 0
-	AutoRenewTimeUnit string `json:"autoRenewTimeUnit"` // "month",
-	Name              string `json:"name"`              // "kkk"
-	ServiceType       string `json:"serviceType"`       // "EIP"
+	PurchaseNum       int    `json:"purchaseNum,omitempty"`
+	PurchaseLength    int    `json:"purchaseLength,omitempty"`    // 1
+	AutoRenewTime     int    `json:"autoRenewTime,omitempty"`     // 0
+	AutoRenewTimeUnit string `json:"autoRenewTimeUnit,omitempty"` // "month",
+	Name              string `json:"name,omitempty"`              // "kkk"
+	ServiceType       string `json:"serviceType,omitempty"`       // "EIP"
 }
 
 // ScaleDownClusterArgs define  args
